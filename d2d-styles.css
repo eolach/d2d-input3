@@ -1,0 +1,90 @@
+/*.d2dcontentHeader { background-color: #eeede6; position: relative; height: 35px; color: #93907e; margin: 0 5px; }
+
+#d2dinputtable th td{
+ 	font-size: 0.1em;
+}
+
+*/
+
+.contentHeader { background-color: #eeede6; position: relative; height: 35px; color: #93907e; margin: 0 5px; }
+
+#d2dinputtable {
+  background-color: #eeede6;
+  margin: 0 5px;
+  font-size: 0.7em;
+  table-layout: fixed;
+}
+
+#team_table {
+	width: 100%;
+}
+
+#d2dinputtable TABLE.d2dtable, #d2dinputtable TABLE.d2dtable2  {
+  font-size: 1.0em;
+}
+
+#d2dinputtable TABLE.d2dtable, TABLE.d2dtable TR, TABLE.d2dtable TH, TABLE.d2dtable TD,
+TABLE.d2dtable2, TABLE.d2dtable2 TR,  TABLE.d2dtable2 TD{ 
+	border: blue;
+	height:20px;
+	padding:0px;
+	margin:0px;
+}
+
+.d2dinputcoldata {
+ 	width: 50px;
+}
+
+.d2dinputcollabels {
+ 	/*width: 150px;*/
+}
+
+.d2dinputcolwords {
+ 	width: 200px;
+}
+
+#d2dinputtable TABLE.d2dtable2 {
+	/*width: 20em;*/
+}
+
+
+.d2dbutton {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #eeede6), color-stop(1, #eeede6));
+	background:-moz-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:-webkit-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:-o-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:-ms-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:linear-gradient(to bottom, #eeede6 5%, #eeede6 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeede6', endColorstr='#eeede6',GradientType=0);
+	background-color:#eeede6;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	border:2px solid ##272822;
+	display:inline-block;
+	cursor:pointer;
+	color:#272822;
+	font-family:arial;
+	font-size:1.0em;
+	font-weight:bold;
+	padding:3px 21px;
+	text-decoration:none;
+}
+.d2dbutton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #eeede6), color-stop(1, #eeede6));
+	background:-moz-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:-webkit-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:-o-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:-ms-linear-gradient(top, #eeede6 5%, #eeede6 100%);
+	background:linear-gradient(to bottom, #eeede6 5%, #eeede6 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeede6', endColorstr='#eeede6',GradientType=0);
+	background-color:#eeede6;
+}
+.d2dbutton:active {
+	position:relative;
+	top:1px;
+}
+
+input.d2dbutton{
+	padding: 20px 5px 5px 0;
+}

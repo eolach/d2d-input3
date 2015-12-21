@@ -1,0 +1,119 @@
+.no_chevron ul li:before{
+    content:"";
+}
+
+.d2d_review_table table{
+    border:1px solid #CCC;
+    border-collapse:collapse;
+}
+
+
+.d2d_review_table table, th, tr, td{
+    border: none; 
+}
+
+/*----- Tabs -----*/
+.tabs {
+    width:100%;
+    display:inline-block;
+}
+
+.tabs, .tab-links, .tab-content, {
+    border: none;
+}
+ 
+/*----- Tab Links -----*/
+/* Clearfix */
+.tab-links {
+    width: 100%;
+}
+
+.tab-links:after {
+    display:block;
+    clear:both;
+    content:'';
+}
+
+.tab-links li, .tab-extra li {
+    margin:10px 5px;
+    display: inline-block;
+}
+
+.tab-links ul {
+    text-align: center;
+}
+
+.tab-links ul, .tab-extra ul{
+    list-style-type: none;
+}
+
+.tab-links a, .tab-extra a {
+    border-radius: 3px 3px 0px 0px;
+    font-size:16px;
+    font-weight:600;
+    transition:all linear 0.15s;
+}
+
+.tab-links li.active {
+    padding: 10px 20px 10px 20px;
+    /*color:#111111;*/
+    background-color: #fff;
+}
+
+.tab-links li.active a{
+    color:#6c0602;
+}
+
+
+.tab-links li.inactive, .tab-links li.d2d-extra {
+    background-color: #6c0602;
+    padding: 10px;
+}
+.tab-links li.inactive:hover ,.tab-links li.d2d-extra:hover {
+    background-color: #8c0c04;
+}
+ 
+
+.tab-links li.inactive a, .tab-links li.d2d-extra a {
+    color:#eeede6;
+}
+
+/*.tab-links li.inactive a:hover, .tab-links li.d2d-extra a:hover {
+    background-color: #8c0c04;
+ }
+*/
+/*----- Content of Tabs -----*/
+.tab-content {
+    padding:15px;
+    border-radius:3px;
+    /*box-shadow:-1px 1px 1px rgba(0,0,0,0.15);*/
+}
+
+.tab {
+    display:none;
+}
+
+.tab.active {
+    display:inline;
+}
+.tab.active td {
+        width: 50%;
+}
+
+
+ #d2d_review_maint_table tr, #d2d_review_form {
+    border:none;
+    border-color: ffffff;
+ }
+
+ .d2d_upper_box {
+    display:inline-block;
+    width:150px;
+    height:15;  
+    padding: 5px; 
+    margin:1px 5px  1px  5px;
+ }
+
+ .amcharts-category-axis .amcharts-axis-label {
+  cursor: help;
+}
