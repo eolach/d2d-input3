@@ -40,23 +40,15 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		public $core_d2d_inds = array();
 
 		public $cost_inds = array(
-			'cost',
-			'cost_adj',
-			'cost_prim',
-			'cost_serv',
-			'cost_settings',
-			'cost_inst'
+			// 'cost',
+			// 'cost_adj',
+			// 'cost_prim',
+			// 'cost_serv',
+			// 'cost_settings',
+			// 'cost_inst'
 		);
 
-		public $qual_inds = array(
-			'overall',
-			'access',
-			'sensitivity',
-			'trust',
-			'knowledge',
-			'commitment',
-			'collaboration'
-			);
+		public $qual_inds = array();
 
 		private $qual_rollup_labels = array(
 				'indicator' => "Quality",
@@ -192,19 +184,16 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		public function __construct() {
 
 			global $d2d_data_specs;
-			// $this -> core_d2d_inds = $d2d_data_specs -> make_tab_group("core_d2d_inds");
-			$this ->  core_d2d_inds = array(
-				'courtesy',
-				'reas_wait',
-				'involved',
-				'colorectal_ca_ices',
-				'cervical_ca_ices',
-				'child_imm',
-				'child_imm_rost',
-				'next_day',
-				'primary_prov',
-				'primary_prov_team',
-				'readmission'
+			$this -> core_d2d_inds = $d2d_data_specs -> make_tab_group("core_d2d_inds");
+			$this -> cost_inds = $d2d_data_specs -> make_tab_group("cost_inds");
+			$this -> qual_inds = array(
+				'overall',
+				'access',
+				'sensitivity',
+				'trust',
+				'knowledge',
+				'commitment',
+				'collaboration'
 			);
 
 			$this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered");

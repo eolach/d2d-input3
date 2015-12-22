@@ -236,6 +236,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "data",
+					"review_tab" => "cost_inds",
 					"chart_id" => "cost_inds"
 					)
 				),
@@ -444,8 +445,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"review_tab" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"indicator_group" => "rate",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "pat_centered",
 					"chart_label" => "Patient Involved",
 					"hyperlink" => "http://www.afhto.ca/uncategorized/patient-experience-involved/"
@@ -461,7 +462,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "pat_centered",
 					"chart_label" => "Courtesy of staff",
 					"hyperlink" => "http://www.afhto.ca/members-only/pt-satisfaction-with-office-staff"
@@ -477,7 +478,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "pat_centered",
 					"chart_label" => "Reasonable wait time",
 					"hyperlink" => "http://www.afhto.ca/members-only/reasonable-wait-for-appointment"
@@ -494,7 +495,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Colorectal ca screening",
 					"hyperlink" => "http://www.afhto.ca/uncategorized/colorectal-cancer-screening/"
@@ -510,7 +511,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Cervical ca screening",
 					"hyperlink" => "http://www.afhto.ca/uncategorized/cervical-cancer-screening/"
@@ -526,7 +527,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"css_style" => NULL,
 					"short_label" => "child_imm",
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Child Immunization - all",
 					"hyperlink" => "http://www.afhto.ca/uncategorized/childhood-immunization/"
@@ -544,7 +545,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "access",
 					"chart_label" => "Same/next day appt",
 					"hyperlink" => "http://www.afhto.ca/members-only/samenext-day-appointments/"
@@ -560,7 +561,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "access",
 					"chart_label" => "Reg provider - ind",
 					"hyperlink" => "http://www.afhto.ca/uncategorized/regular-primary-care-provider/"
@@ -576,7 +577,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "access",
 					"chart_label" => "Reg provider - team",
 					"hyperlink" => "http://www.afhto.ca/uncategorized/regular-primary-care-provider/"
@@ -594,7 +595,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					"indicator_tab" => "core_d2d_inds",
+					"review_tab" => "core_d2d_inds",
 					"chart_id" => "integration",
 					"chart_label" => "Readmission to hospital",
 					"hyperlink" => "http://www.afhto.ca/uncategorized/readmissions-to-hospital/"
@@ -612,7 +613,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"css_style" => NULL,
 					"short_label" => "diabetes_core",
 					"indicator_group" => "rate",
-					"indicator_tab" => NULL,
+					"review_tab" => NULL,
 					"chart_id" => NULL
 					),
 				),
