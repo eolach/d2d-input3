@@ -1,6 +1,8 @@
 <?php
 
- /* @updated 18-Apr-2015
+ /* @updated 21-Dec-2015
+ *    Added field review_tab to identify which tab will display the indicator 
+ *    Added field chart_id to identify which chart will display the indicator 
  */
 // Prohibit direct script loading.
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
@@ -209,7 +211,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					),
 				),
 
-		// Core D2D indicator set
+		// Cost D2D indicator set
 			array( "name" => "cost",
 				"specs" => array(
 					"indicator_class" => "simple",
@@ -219,7 +221,9 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "data"
+					"indicator_group" => "data",
+					"review_tab" => "cost_inds",
+					"chart_id" => "cost_drill"
 					),
 				),
 			array( "name" => "cost_adj",
@@ -231,7 +235,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "data"
+					"indicator_group" => "data",
+					"chart_id" => "cost_inds"
 					)
 				),
 			array( "name" => "cost_prim",
@@ -243,7 +248,9 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "data"
+					"indicator_group" => "data",
+					"review_tab" => "cost_inds",
+					"chart_id" => "cost_drill"
 					)
 				),
 			array( "name" => "cost_serv",
@@ -255,7 +262,9 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "data"
+					"indicator_group" => "data",
+					"review_tab" => "cost_inds",
+					"chart_id" => "cost_drill"
 					)
 				),
 			array( "name" => "cost_settings",
@@ -267,7 +276,9 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "data"
+					"indicator_group" => "data",
+					"review_tab" => "cost_inds",
+					"chart_id" => "cost_drill"
 					)
 				),
 			array( "name" => "cost_inst",
@@ -279,9 +290,14 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "data"
+					"indicator_group" => "data",
+					"review_tab" => "cost_inds",
+					"chart_id" => "cost_drill"
 					)
 				),
+			
+// Added 2015-11-25 on M.Krahn instructions
+
 			array( "name" => "cap_phys_appin",
 				"specs" => array(
 					"indicator_class" => "simple",
@@ -318,8 +334,6 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"indicator_group" => "rate"
 					)
 				),
-// Added 2015-11-25 on M.Krahn instructions
-
 			array( "name" => "num_phys_est",
 				"specs" => array(
 					"indicator_class" => "simple",
@@ -332,8 +346,6 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"indicator_group" => "rate"
 					)
 				),
-
-			// 
 			array( "name" => "cap_ihp_appin",
 				"specs" => array(
 					"indicator_class" => "simple",
@@ -370,8 +382,6 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"indicator_group" => "rate"
 					)
 				),
-// Added 2015-11-25 on M.Krahn instructions
-
 			array( "name" => "num_ihp_est",
 				"specs" => array(
 					"indicator_class" => "simple",
@@ -423,7 +433,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					)
 				),
 
-		//  d2d set
+		//  Core d2d set
+		//   - patient_centered
 			array( "name" => "involved",
 				"specs" => array(
 					"indicator_class" => "hex",
@@ -433,7 +444,11 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "rate"
+					"review_tab" => "rate",
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "pat_centered",
+					"chart_label" => "Patient Involved",
+					"hyperlink" => "http://www.afhto.ca/uncategorized/patient-experience-involved/"
 					)
 				),
 			array( "name" => "courtesy",
@@ -445,7 +460,11 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "rate"
+					"indicator_group" => "rate",
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "pat_centered",
+					"chart_label" => "Courtesy of staff",
+					"hyperlink" => "http://www.afhto.ca/members-only/pt-satisfaction-with-office-staff"
 					)
 				),
 			array( "name" => "reas_wait",
@@ -457,60 +476,14 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "rate"
+					"indicator_group" => "rate",
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "pat_centered",
+					"chart_label" => "Reasonable wait time",
+					"hyperlink" => "http://www.afhto.ca/members-only/reasonable-wait-for-appointment"
 					)
 				),
-			array( "name" => "next_day",
-				"specs" => array(
-					"indicator_class" => "hex",
-					"menu_class" => "pat_exp",
-					"full_label" => "Same/next day appointment",
-					"short_label" => "next_day",
-					"db_type" => "DOUBLE",
-					"value" => NULL,
-					"css_style" => NULL,
-					"indicator_group" => "rate",
-					'hyperlink' => 'http://www.afhto.ca/members-only/samenext-day-appointments/'
-					),
-				),
-			array( "name" => "readmission",
-				"specs" => array(
-					"indicator_class" => "hex",
-					"menu_class" => "ICES",
-					"full_label" => "Readmissions to hospital",
-					"short_label" => "readmission",
-					"db_type" => "DOUBLE",
-					"value" => NULL,
-					"css_style" => NULL,
-					"indicator_group" => "rate",
-					'hyperlink' => 'http://www.afhto.ca/uncategorized/readmissions-to-hospital/'
-					),
-				),
-			array( "name" => "primary_prov",
-				"specs" => array(
-					"indicator_class" => "hex",
-					"menu_class" => "ICES",
-					"full_label" => "Regular primary care provider - individual",
-					"short_label" => "primary_prov",
-					"db_type" => "DOUBLE",
-					"value" => NULL,
-					"css_style" => NULL,
-					"indicator_group" => "rate",
-					'hyperlink' => 'http://www.afhto.ca/uncategorized/regular-primary-care-provider/'
-					),
-				),
-			array( "name" => "primary_prov_team",
-				"specs" => array(
-					"indicator_class" => "hex",
-					"menu_class" => "ICES",
-					"full_label" => "Regular primary care provider - team",
-					"short_label" => "primary_prov_team",
-					"db_type" => "DOUBLE",
-					"value" => NULL,
-					"css_style" => NULL,
-					"indicator_group" => "rate"
-					),
-				),
+		//   - effectiveness
 			array( "name" => "colorectal_ca_ices",
 				"specs" => array(
 					"indicator_class" => "hex",
@@ -521,7 +494,10 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					'hyperlink' => 'http://www.afhto.ca/uncategorized/colorectal-cancer-screening/'
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "effectiveness",
+					"chart_label" => "Colorectal ca screening",
+					"hyperlink" => "http://www.afhto.ca/uncategorized/colorectal-cancer-screening/"
 					),
 				),
 			array( "name" => "cervical_ca_ices",
@@ -534,21 +510,12 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
-					'hyperlink' => 'http://www.afhto.ca/uncategorized/cervical-cancer-screening/'
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "effectiveness",
+					"chart_label" => "Cervical ca screening",
+					"hyperlink" => "http://www.afhto.ca/uncategorized/cervical-cancer-screening/"
 					),
 				),
-			// array( "name" => "colorectal_ca_emr",
-			// 	"specs" => array(
-			// 		"indicator_class" => "hex",
-			// 		"menu_class" => "emr",
-			// 		"full_label" => "Colorectal screening",
-			// 		"db_type" => "DOUBLE",
-			// 		"value" => NULL,
-			// 		"css_style" => NULL,
-			// 		"short_label" => "colorectal_ca_emr",
-			// 		"indicator_group" => "rate"
-			// 		),
-			// 	),
 			array( "name" => "child_imm",
 				"specs" => array(
 					"indicator_class" => "hex",
@@ -559,10 +526,80 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"css_style" => NULL,
 					"short_label" => "child_imm",
 					"indicator_group" => "rate",
-					'hyperlink' => 'http://www.afhto.ca/uncategorized/childhood-immunization/'
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "effectiveness",
+					"chart_label" => "Child Immunization - all",
+					"hyperlink" => "http://www.afhto.ca/uncategorized/childhood-immunization/"
 					),
 				),
 
+		//   - access
+			array( "name" => "next_day",
+				"specs" => array(
+					"indicator_class" => "hex",
+					"menu_class" => "pat_exp",
+					"full_label" => "Same/next day appointment",
+					"short_label" => "next_day",
+					"db_type" => "DOUBLE",
+					"value" => NULL,
+					"css_style" => NULL,
+					"indicator_group" => "rate",
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "access",
+					"chart_label" => "Same/next day appt",
+					"hyperlink" => "http://www.afhto.ca/members-only/samenext-day-appointments/"
+					),
+				),
+			array( "name" => "primary_prov",
+				"specs" => array(
+					"indicator_class" => "hex",
+					"menu_class" => "ICES",
+					"full_label" => "Regular primary care provider - individual",
+					"short_label" => "primary_prov",
+					"db_type" => "DOUBLE",
+					"value" => NULL,
+					"css_style" => NULL,
+					"indicator_group" => "rate",
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "access",
+					"chart_label" => "Reg provider - ind",
+					"hyperlink" => "http://www.afhto.ca/uncategorized/regular-primary-care-provider/"
+					),
+				),
+			array( "name" => "primary_prov_team",
+				"specs" => array(
+					"indicator_class" => "hex",
+					"menu_class" => "ICES",
+					"full_label" => "Regular primary care provider - team",
+					"short_label" => "primary_prov_team",
+					"db_type" => "DOUBLE",
+					"value" => NULL,
+					"css_style" => NULL,
+					"indicator_group" => "rate",
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "access",
+					"chart_label" => "Reg provider - team",
+					"hyperlink" => "http://www.afhto.ca/uncategorized/regular-primary-care-provider/"
+					),
+				),
+			
+		//   - integration
+			array( "name" => "readmission",
+				"specs" => array(
+					"indicator_class" => "hex",
+					"menu_class" => "ICES",
+					"full_label" => "Readmissions to hospital",
+					"short_label" => "readmission",
+					"db_type" => "DOUBLE",
+					"value" => NULL,
+					"css_style" => NULL,
+					"indicator_group" => "rate",
+					"indicator_tab" => "core_d2d_inds",
+					"chart_id" => "integration",
+					"chart_label" => "Readmission to hospital",
+					"hyperlink" => "http://www.afhto.ca/uncategorized/readmissions-to-hospital/"
+					),
+				),
 
 
 			array( "name" => "diabetes_core",
@@ -574,27 +611,11 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"short_label" => "diabetes_core",
-					"indicator_group" => "rate"
+					"indicator_group" => "rate",
+					"indicator_tab" => NULL,
+					"chart_id" => NULL
 					),
 				),
-
-
-
-
-
-
-			// array( "name" => "cervical_ca_emr",
-			// 	"specs" => array(
-			// 		"indicator_class" => "hex",
-			// 		"menu_class" => "emr",
-			// 		"full_label" => "Cervical screening",
-			// 		"db_type" => "DOUBLE",
-			// 		"value" => NULL,
-			// 		"css_style" => NULL,
-			// 		"short_label" => "cervical_ca_emr",
-			// 		"indicator_group" => "rate"
-			// 		),
-			// 	),
 			
 				
 		// Expanded quality indicator set
@@ -1061,90 +1082,6 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"drill_down" => NULL
 					),
 				),
-			//array( "name" => "pall_coverage",
-			//	"specs" => array(
-			//		"indicator_class" => 'hex',
-			//		"full_label" => "7x24 coverage for palliative patients",
-			//		"short_label" => "pall_coverage",
-			//		"menu_class" => "di_team",
-			//		"db_type" => "DOUBLE",
-			//		"value" => NULL,
-			//		"css_style" => NULL,
-			//		"indicator_group" => "quality",
-			//		"parent_id" => NULL,
-			//		"drill_down" => NULL
-			//		),
-			//	),
-			//array( "name" => "ltc_coverage",
-			//	"specs" => array(
-			//		"indicator_class" => 'hex',
-			//		"full_label" => "7x24 coverage for long-term care patients",
-			//		"short_label" => "ltc_coverage",
-			//		"menu_class" => "di_team",
-			//		"db_type" => "DOUBLE",
-			//		"value" => NULL,
-			//		"css_style" => NULL,
-			//		"indicator_group" => "quality",
-			//		"parent_id" => NULL,
-			//		"drill_down" => NULL
-			//		),
-			//	),
-			//array( "name" => "office_access",
-			//	"specs" => array(
-			//		"indicator_class" => 'hex',
-			//		"full_label" => "Direct office access",
-			//		"short_label" => "office_access",
-			//		"menu_class" => "di_team",
-			//		"db_type" => "DOUBLE",
-			//		"value" => NULL,
-			//		"css_style" => NULL,
-			//		"indicator_group" => "quality",
-			//		"parent_id" => NULL,
-			//		"drill_down" => NULL
-			//		),
-			//	),
-			//array( "name" => "prim_rec_hosp_emr",
-			//	"specs" => array(
-			//		"indicator_class" => 'hex',
-			//		"full_label" => "Primary care record included in hospital admission record",
-			//		"short_label" => "prim_rec_hosp_emr",
-			//		"menu_class" => "di_team",
-			//		"db_type" => "DOUBLE",
-			//		"value" => NULL,
-			//		"css_style" => NULL,
-			//		"indicator_group" => "quality",
-			//		"parent_id" => NULL,
-			//		"drill_down" => NULL
-			//		),
-			//	),
-			//array( "name" => "qual_team",
-			//	"specs" => array(
-			//		"indicator_class" => 'hex',
-			//		"full_label" => "7 Day follow-up – team specific",
-			//		"short_label" => "qual_team",
-			//		"menu_class" => "qual",
-			//		"db_type" => "DOUBLE",
-			//		"value" => NULL,
-			//		"css_style" => NULL,
-			//		"indicator_group" => "rate",
-			//		"parent_id" => NULL,
-			//		"drill_down" => NULL
-			//		),
-			//	),
-			//array( "name" => "qual_mohltc",
-			//	"specs" => array(
-			//		"indicator_class" => 'hex',
-			//		"full_label" => "7 day follow-up - MOHLTC",
-			//		"short_label" => "qual_mohltc",
-			//		"menu_class" => "qual",
-			//		"db_type" => "DOUBLE",
-			//		"value" => NULL,
-			//		"css_style" => NULL,
-			//		"indicator_group" => "rate",
-			//		"parent_id" => NULL,
-			//		"drill_down" => NULL
-			//		),
-			//	),
 			array( "name" => "X7_day_text",
 				"specs" => array(
 					"indicator_class" => 'text',
@@ -1184,18 +1121,6 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"indicator_group" => "rate"
 					),
 				),
-			// array( "name" => "emr_q_colo_cerv",
-			//	"specs" => array(
-			//		"indicator_class" => "simple",
-			//		"full_label" => "Cervical and colorectal ca screening",
-			//		"short_label" => "emr_q_colo_cerv",
-			//		"menu_class" => "data_qual",
-			//		"db_type" => "DOUBLE",
-			//		"value" => NULL,
-			//		"css_style" => NULL,
-			//		"indicator_group" => "rate"
-			//		),
-			//	),
 			array( "name" => "emr_q_smoking",
 				"specs" => array(
 					"indicator_class" => "simple",
@@ -1369,6 +1294,44 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 			$num_periods = count( $this -> data_specs[ 1 ]['specs']['value'] );
 			$latest_period = $this -> data_specs[ 1 ]['specs']['value'][$num_periods - 1] ;
 			return $latest_period;
+		}
+
+		/**
+		 * Extracts the indicators that are grouped under the review tabs
+		 * @param  [string] $tab_name [neame of the tab group as used here]
+		 * @return [array]           [short labels of the relevant indicators]
+		 */
+		public function make_tab_group($tab_name){
+			
+			$tab_array = array();
+
+			foreach($this -> data_specs as $spec){
+				if ($spec['specs']['review_tab'] == $tab_name ) {
+					$temp = $spec['specs']['short_label'];
+					array_push($tab_array, $temp);
+				}
+			}
+			return $tab_array;
+		}
+
+		// *
+		//  * Extracts the indicators that will be displayed in the named chart.
+		//  * @param  [string] $chart_name [name of the chart]
+		//  * @return [array]             [array of the short label and display label]
+		 
+		public function make_chart($chart_name){
+			$chart_array = array();
+			foreach($this -> data_specs as $spec){
+				if ($spec['specs']['chart_id'] == $chart_name ) {
+					$temp = array(
+						"indicator" => $spec['specs']['chart_label'],
+						"short_label" => $spec['specs']['short_label'],
+						"hyperlink" => $spec['specs']['hyperlink']
+						);
+					array_push($chart_array, $temp);
+				}
+			}
+			return $chart_array;
 		}
 	}
 }

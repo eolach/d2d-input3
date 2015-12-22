@@ -36,19 +36,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		private	$std_colors = array('#282D42', '#FBB958', '#812620');
 		private	$trend_colors = array('#A00961', '#8AA961', '#8AA1B1');
 
-		public $core_d2d_inds = array(
-			'courtesy',
-			'reas_wait',
-			'involved',
-			'colorectal_ca_ices',
-			'cervical_ca_ices',
-			'child_imm',
-			'child_imm_rost',
-			'next_day',
-			'primary_prov',
-			'primary_prov_team',
-			'readmission'
-		);
+
+		public $core_d2d_inds = array();
 
 		public $cost_inds = array(
 			'cost',
@@ -137,23 +126,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				)
 		);
 
-		private $pat_centered_labels = array(
-			array(
-				'indicator' => "Pt. Satisfaction", //<br>with office staff",
-				'short_label' => 'courtesy',
-				'hyperlink' => 'http://www.afhto.ca/members-only/pt-satisfaction-with-office-staff'
-				),
-			array(
-				'indicator' => "Reasonable wait time",
-				'short_label' => 'reas_wait',
-				'hyperlink' => 'http://www.afhto.ca/members-only/reasonable-wait-for-appointment'
-				),
-			array(
-				'indicator' => "Pt. exp - Involved",
-				'short_label' => 'involved',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/patient-experience-involved/'
-				)
-		);
+		private $pat_centered_labels = array();
 
 		private $effectiveness_labels = array(
 			// array(
@@ -167,7 +140,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/cervical-cancer-screening/'
 			// 	),
 			// array(
-			// 	'indicator' => "Immunization - all",
+			// 	'indicator' => "Child Immunization - all",
 			// 	'short_label' => 'child_imm',
 			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/childhood-immunization/'
 			// 	),
@@ -179,50 +152,29 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		);
 
 		private $access_labels = array(
-			array(
-				'indicator' => "Same/next day appt",
-				'short_label' => 'next_day',
-				'hyperlink' => 'http://www.afhto.ca/members-only/samenext-day-appointments/'
-				),
-			array(
-				'indicator' => "Primary provider - ind",
-				'short_label' => 'primary_prov',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/regular-primary-care-provider/'
-				),
-			array(
-				'indicator' => "Primary provider - team",
-				'short_label' => 'primary_prov_team',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/regular-primary-care-provider/'
-				),
-						array(
-				'indicator' => "Colorectal ca screening",
-				'short_label' => 'colorectal_ca_ices',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/colorectal-cancer-screening/'
-				),
-			array(
-				'indicator' => "Cervical ca screening",
-				'short_label' => 'cervical_ca_ices',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/cervical-cancer-screening/'
-				),
-			array(
-				'indicator' => "Immunization - all",
-				'short_label' => 'child_imm',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/childhood-immunization/'
-				),
-			array(
-				'indicator' => "Immunization - rostered",
-				'short_label' => 'child_imm_rost',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/childhood-immunization/'
-				)
-
+			// array(
+			// 	'indicator' => "Same/next day appt",
+			// 	'short_label' => 'next_day',
+			// 	'hyperlink' => 'http://www.afhto.ca/members-only/samenext-day-appointments/'
+			// 	),
+			// array(
+			// 	'indicator' => "Reg provider - ind",
+			// 	'short_label' => 'primary_prov',
+			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/regular-primary-care-provider/'
+			// 	),
+			// array(
+			// 	'indicator' => "Reg provider - team",
+			// 	'short_label' => 'primary_prov_team',
+			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/regular-primary-care-provider/'
+			// 	)
 		);
 
 		private $integration_labels = array(
-			array(
-				'indicator' => "Readmission to hospital",
-				'short_label' => 'readmission',
-				'hyperlink' => 'http://www.afhto.ca/uncategorized/readmissions-to-hospital/'
-				)
+			// array(
+			// 	'indicator' => "Readmission to hospital",
+			// 	'short_label' => 'readmission',
+			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/readmissions-to-hospital/'
+			// 	)
 		);
 
 		private $data_qual_labels = array(
@@ -238,6 +190,28 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 	// Constructor and utilities
 		public function __construct() {
+
+			global $d2d_data_specs;
+			// $this -> core_d2d_inds = $d2d_data_specs -> make_tab_group("core_d2d_inds");
+			$this ->  core_d2d_inds = array(
+				'courtesy',
+				'reas_wait',
+				'involved',
+				'colorectal_ca_ices',
+				'cervical_ca_ices',
+				'child_imm',
+				'child_imm_rost',
+				'next_day',
+				'primary_prov',
+				'primary_prov_team',
+				'readmission'
+			);
+
+			$this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered");
+			$this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness");
+			$this -> access_labels = $d2d_data_specs -> make_chart("access");
+			$this -> integration = $d2d_data_specs -> make_chart("integration");
+
 		}
 
 		/**
@@ -1071,17 +1045,14 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			array_push($all_charts, $this -> build_group_chart( $this -> qual_drill_labels, 'simple') );
 			array_push($all_charts, $this -> build_simple_chart( $this -> cost_rollup_labels) );
 			array_push($all_charts, $this -> build_group_chart( $this -> cost_drill_labels, 'simple') );
-			
 			array_push($all_charts, $this -> build_group_chart( $this -> pat_centered_labels, 'hex' ) );
 			array_push($all_charts, $this -> build_group_chart( $this -> effectiveness_labels, 'hex' ) );
 			array_push($all_charts, $this -> build_group_chart( $this -> access_labels, 'hex' ) );
 			array_push($all_charts, $this -> build_group_chart( $this -> integration_labels, 'hex' ) );
-			
 			array_push($all_charts, $this -> build_trend_chart( $this -> pat_centered_labels, 'hex' ) );
 			array_push($all_charts, $this -> build_trend_chart( $this -> effectiveness_labels, 'hex' ) );
 			array_push($all_charts, $this -> build_trend_chart( $this -> access_labels, 'hex' ) );
 			array_push($all_charts, $this -> build_trend_chart( $this -> integration_labels, 'hex' ) );
-			
 			array_push($all_charts, $this -> build_simple_stats( $this -> data_qual_labels) );
 			array_push($all_charts, $this -> build_simple_stats( $this -> sami_labels) );
 			array_push($all_charts, $this -> build_peer_inds() );
@@ -1201,8 +1172,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$vals = array();
 
 			foreach ( $indicator_labels as $ind){
-				array_push($inds, $ind['indicator']);	
-			echo ' building'; 
+				array_push($inds, $ind['indicator']);
+			//echo ' building trend for ' . $ind['indicator'] . '<br>';
+
 				// Scan the d2d_values for iterations
 				$keys = array_keys($this -> d2d_values[$ind ['short_label']]);
 				$val_array = array();
