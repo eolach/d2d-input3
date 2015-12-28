@@ -110,6 +110,9 @@ if ( !class_exists( 'D2D_review' ) ) {
 					//  Select
 					
 					// Select teams or trend
+					echo '<div id="tables">';
+						echo'<center><a id="table_view" href="#teams">Click for table view</a></center>';
+					echo '</div>';
 					echo '<div id="trends">';
 						echo'<center><a id="teams_trend" href="#teams">Click to view my team\'s data over iterations</a></center>';
 					echo '</div>';
@@ -180,9 +183,56 @@ if ( !class_exists( 'D2D_review' ) ) {
 						// echo '</div>';
 					echo '</div>';
 
+					// Lay out the trends
+					echo '<div id="table" class="tab">';
+
+					echo '<table id="review_table">';
+					echo '<thead><tr><th >PCPMF Domain</th>
+					<th>Core D2D indicators</th>
+					<th>Team</th>
+					<th>Peer</th>
+					<th>Peer N</th>
+					<th>Peer SAMI</th>
+					<th>D2D</th>
+					<th>D2D N</th>
+					<th>D2D SAMI</th>
+					<th>D2D range</td></th></thead>';
+
+					echo '<tbody>';
+
+					$table_row = $this -> build_table();
+					$keys = array_keys($table_row);
+					foreach($keys as $k){
+						echo '<td>' . $table_row[$k] . '</td>'; 
+					}
+
+					echo '</tbody>';
+
+					echo '</table>';
+
+
+					echo '</div>';
+
+
 				echo '</div>' ;
 			echo '</div>';
 		echo '</div>';
+		}
+
+		private function build_table(){
+			$table_view = array(
+				'PCPMF'   => 'Effectiveness',
+				'CoreD2D' => 'Cervical Ca screening',
+				'Team'    => 70,
+				'Peer'    => 75,
+				'Peer_N'  => NULL,
+				'Peer_SAMI' => NULL,
+				'D2D'     => 80,
+				'D2D_N'   => NULL,
+				'D2D_SAMI'    => NULL,
+				'D2D_range'    => 75
+				);
+			return $table_view;
 		}
 
 		public function build_chart_list(){

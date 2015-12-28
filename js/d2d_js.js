@@ -187,7 +187,7 @@ jQuery(document).ready( function($) {
             $('#trend').addClass('tab active');
             $('#teams').removeClass('tab active').addClass('tab');
         } else {
-            $(this).text("Click to view trends")
+            $(this).text("Click to view my team\'s data over iterations")
             $(this).attr('href', '#teams');
             $('#teams').addClass('tab active');
             $('#trend').removeClass('tab active').addClass('tab');
@@ -200,6 +200,27 @@ jQuery(document).ready( function($) {
                 this_chart.animateAgain();
            }
      })
+
+    // Manage the table view, return to main view
+    $('#table_view').on('click', function(e) {
+        e.preventDefault();
+
+        var currentState = $(this).attr('href');
+        if( currentState == '#teams'){
+            $(this).text("Click to return to chart view");
+            $(this).attr('href', '#table');
+            $('#table').addClass('tab active');
+            $('#teams_trend').text("");
+            $('#teams').removeClass('tab active').addClass('tab');
+        } else {
+            $(this).text("Click for table view")
+            $(this).attr('href', '#teams');
+            $('#teams').addClass('tab active');
+            $('#teams_trend').text("Click to view my team\'s data over iterations");
+            $('#table').removeClass('tab active').addClass('tab');
+        }
+         
+      })
 
     // Manage main tabs
     $('.tabs .tab-links .d2d').on('click', function(e)  {
