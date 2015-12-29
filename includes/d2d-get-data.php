@@ -120,54 +120,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 		private $pat_centered_labels = array();
 
-		private $effectiveness_labels = array(
-			// array(
-			// 	'indicator' => "Colorectal ca screening",
-			// 	'short_label' => 'colorectal_ca_ices',
-			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/colorectal-cancer-screening/'
-			// 	),
-			// array(
-			// 	'indicator' => "Cervical ca screening",
-			// 	'short_label' => 'cervical_ca_ices',
-			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/cervical-cancer-screening/'
-			// 	),
-			// array(
-			// 	'indicator' => "Child Immunization - all",
-			// 	'short_label' => 'child_imm',
-			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/childhood-immunization/'
-			// 	),
-			// array(
-			// 	'indicator' => "Immunization - rostered",
-			// 	'short_label' => 'child_imm_rost',
-			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/childhood-immunization/'
-			// 	)
-		);
+		private $effectiveness_labels = array();
 
-		private $access_labels = array(
-			// array(
-			// 	'indicator' => "Same/next day appt",
-			// 	'short_label' => 'next_day',
-			// 	'hyperlink' => 'http://www.afhto.ca/members-only/samenext-day-appointments/'
-			// 	),
-			// array(
-			// 	'indicator' => "Reg provider - ind",
-			// 	'short_label' => 'primary_prov',
-			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/regular-primary-care-provider/'
-			// 	),
-			// array(
-			// 	'indicator' => "Reg provider - team",
-			// 	'short_label' => 'primary_prov_team',
-			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/regular-primary-care-provider/'
-			// 	)
-		);
+		private $access_labels = array();
 
-		private $integration_labels = array(
-			// array(
-			// 	'indicator' => "Readmission to hospital",
-			// 	'short_label' => 'readmission',
-			// 	'hyperlink' => 'http://www.afhto.ca/uncategorized/readmissions-to-hospital/'
-			// 	)
-		);
+		private $integration_labels = array();
 
 		private $data_qual_labels = array(
 				'indicator' => "Team quality",

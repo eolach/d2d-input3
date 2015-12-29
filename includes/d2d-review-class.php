@@ -30,12 +30,20 @@ if ( !class_exists( 'D2D_review' ) ) {
 			$D2D_fetch_data  -> test_wp_get_data();		
 		}
 
+		/**
+		 * Lays out the tabbed portion of the review page
+		 * Within the major tabs, calls the chart shortcodes that display the charts within the relevant 
+		 * divs of the HTML pages. The upper portion is handles by main_page.php.
+		 * The tab funtionality is managed within the javascript file in js/d2d_js.js
+		 * The table option within the core d2d tab is managed by a separate function below
+		 * @return none.
+		 */
 		public function process_functions(){
 			include( D2D_REVIEW_ABSPATH . 'includes/main_page.php');
 				
 			echo '<div class="tab-content">';
 				
-			//  Layout the compositie indicators
+			//  Layout the composite indicators
 				echo '<div id="tab1" class="tab active">';
 					echo '<center><b>Roll-up indicators</b></center>';
 					// Select drill down or roll up
