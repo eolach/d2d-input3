@@ -225,6 +225,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 */
 		public function process_data( $post_data ){
 
+			global $D2D_review;
+
 			$this -> read_post( $post_data );
 
 			$this -> retrieve_data_sets( 'wp' );
@@ -1002,6 +1004,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			array_push($all_charts, $this -> build_simple_stats( $this -> data_qual_labels) );
 			array_push($all_charts, $this -> build_simple_stats( $this -> sami_labels) );
 			array_push($all_charts, $this -> build_peer_inds() );
+			array_push($all_charts, $this -> build_table() );
 
 			
 			return $all_charts;
@@ -1160,6 +1163,34 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				);
 			return $peer_inds;
 		}
+
+		/**
+		 * Build the table using the values calculated in the d2d_fetch_data object in d2d-get-data.php
+		 * @return array(array) Array of indicator values for each of the fixed indicators in the table.
+		 */
+		private function build_table(){
+			// $values = $D2D_fetch_data -> d2d_values;
+			$t_view = array();
+			$t_row = array(
+				'PCPMF'   => 'Effectiveness',
+				'CoreD2D' => 'Cervical Ca screening',
+				'Team'    => 70,
+				'Peer'    => 75,
+				'Peer_N'  => NULL,
+				'Peer_SAMI' => NULL,
+				'D2D'     => 80,
+				'D2D_N'   => NULL,
+				'D2D_SAMI'    => NULL,
+				'D2D_range'    => 75
+				);
+			array_push($t_view, $t_row);
+			return $t_view;
+		}
+
+
+
+
+
 	}
 }
 

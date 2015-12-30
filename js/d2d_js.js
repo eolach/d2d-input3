@@ -1,3 +1,4 @@
+
 jQuery(document).ready( function($) {
 	
     // 
@@ -5,10 +6,10 @@ jQuery(document).ready( function($) {
 //
     myHandler2();
 
-
     function myHandler1( event ){
         // event.preventDefault();
 
+        var table_data = 678;
 
         var selected_option = $(this).find( 'option:selected' ).text();
      
@@ -26,8 +27,8 @@ jQuery(document).ready( function($) {
         // the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
         $.post(ajax_object.ajaxurl, data, function(response) {
             if (typeof response['fail_code'] !== 'undefined' ){
-            // alert("Team code " + response["team_code"] + ' not found');
-            $('#d2d_instruct').html('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
+                // alert("Team code " + response["team_code"] + ' not found');
+                $('#d2d_instruct').html('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
              } else {      
                 // alert("handler1" + response);
                 for (i = 0; i < 12 ; i++){
@@ -52,7 +53,9 @@ jQuery(document).ready( function($) {
                  } else {
                      $('#d2d_instruct').html('Reviewing <em>"' + $("INPUT[name='team_code']").val() + '"</em>.');
                  }
+
            }
+
             return false;   
         });
     }
@@ -102,11 +105,25 @@ jQuery(document).ready( function($) {
                     // $('#team_code_val').html( response[13]['team']);
                     // $('#year_code_val').html( response[13]['year_code']);
                     // $('#rost_all_val').html( response[13]['rost_all']);
-                 if ($("INPUT[name='team_code']").val() == ""){
+                if ($("INPUT[name='team_code']").val() == ""){
                         $('#d2d_instruct').html('Type a team code and press Enter.');
-                 } else {
+                } else {
                      $('#d2d_instruct').html('Reviewing <em>"' + $("INPUT[name='team_code']").val() + '"</em>.');
-                 }
+                }
+                var trHTML = '<tr>';
+                var kkey;
+                var kval;
+                jsonData = response[15][0];
+                keys = Object.keys(jsonData);
+                for (i = 0; i < 10; i++){
+                    data = jsonData[keys[i]];
+                    if (data == null) {
+                        data = '';
+                    }
+                    trHTML += "<td>" + data + "</td>";
+                } 
+                $('#review_table > tbody').append(trHTML + '<tr>');
+
            }
             return false;   
         });
@@ -219,7 +236,9 @@ jQuery(document).ready( function($) {
             $('#teams_trend').text("Click to view my team\'s data over iterations");
             $('#table').removeClass('tab active').addClass('tab');
         }
-         
+        var tab_data = $(this).html(table_data);
+        $("#review_table > tbody:last").append("<tr><td>" + tab_data + "</td><td>Value2 </td></tr>");
+
       })
 
     // Manage main tabs

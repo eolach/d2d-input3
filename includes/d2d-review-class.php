@@ -16,6 +16,7 @@ if ( !class_exists( 'D2D_review' ) ) {
 	class D2D_review {
 
 		public $chartList = array();
+		public $values = "Null";
 
 		public function __construct() {
 			add_shortcode( 'review data', array( $this, 'data_shortcode' ) );
@@ -206,15 +207,15 @@ if ( !class_exists( 'D2D_review' ) ) {
 					<th>D2D SAMI</th>
 					<th>D2D range</td></th></thead>';
 
-					echo '<tbody>';
+					echo '<tbody><tr>';
 
-					$table_row = $this -> build_table();
-					$keys = array_keys($table_row);
+					$table_view = $this -> build_table();
+					$keys = array_keys($table_view[0]);
 					foreach($keys as $k){
-						echo '<td>' . $table_row[$k] . '</td>'; 
+						echo '<td>' . $table_view[0][$k] . '</td>'; 
 					}
 
-					echo '</tbody>';
+					echo '</tr></tbody>';
 
 					echo '</table>';
 
@@ -227,8 +228,30 @@ if ( !class_exists( 'D2D_review' ) ) {
 		echo '</div>';
 		}
 
+		
+
+			// foreach ( $indicator_labels as $ind){
+			// 	array_push($inds, $ind['indicator']);
+			// 	array_push($links, $ind['hyperlink']);
+			// 	$val_array = array();
+			// 	// Distinguihing between hex and simple indicators
+			// 	if ( $type == 'hex' ){
+			// 		$val_array[] = number_format( $this -> d2d_values[$ind ['short_label']]['team'][$this -> rost_all], 1)  ;
+			// 		$val_array[] = number_format( $this -> d2d_values[$ind ['short_label']]['peers'][$this -> rost_all], 1 ) ;
+			// 		$val_array[] = number_format( $this -> d2d_values[$ind ['short_label']]['total'][$this -> rost_all], 1 ) ;
+
+
+
+		/**
+		 * Build the table using the values calculated in the d2d_fetch_data object in d2d-get-data.php
+		 * @return array(array) Array of indicator values for each of the fixed indicators in the table.
+		 */
 		private function build_table(){
-			$table_view = array(
+			// $values = $D2D_fetch_data -> d2d_values;
+			echo 'Printing values';
+			echo ($this -> values);
+			$t_view = array();
+			$t_row = array(
 				'PCPMF'   => 'Effectiveness',
 				'CoreD2D' => 'Cervical Ca screening',
 				'Team'    => 70,
@@ -240,10 +263,12 @@ if ( !class_exists( 'D2D_review' ) ) {
 				'D2D_SAMI'    => NULL,
 				'D2D_range'    => 75
 				);
-			return $table_view;
+			array_push($t_view, $t_row);
+			return $t_view;
 		}
 
 		public function build_chart_list(){
+
 			$this -> chartList = array(
 				'qual_cost' => array(
 					'chart1' => 'quality_rollup',
