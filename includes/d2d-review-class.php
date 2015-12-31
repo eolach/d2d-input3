@@ -209,12 +209,6 @@ if ( !class_exists( 'D2D_review' ) ) {
 
 					echo '<tbody><tr>';
 
-					$table_view = $this -> build_table();
-					$keys = array_keys($table_view[0]);
-					foreach($keys as $k){
-						echo '<td>' . $table_view[0][$k] . '</td>'; 
-					}
-
 					echo '</tr></tbody>';
 
 					echo '</table>';
@@ -246,26 +240,26 @@ if ( !class_exists( 'D2D_review' ) ) {
 		 * Build the table using the values calculated in the d2d_fetch_data object in d2d-get-data.php
 		 * @return array(array) Array of indicator values for each of the fixed indicators in the table.
 		 */
-		private function build_table(){
-			// $values = $D2D_fetch_data -> d2d_values;
-			echo 'Printing values';
-			echo ($this -> values);
-			$t_view = array();
-			$t_row = array(
-				'PCPMF'   => 'Effectiveness',
-				'CoreD2D' => 'Cervical Ca screening',
-				'Team'    => 70,
-				'Peer'    => 75,
-				'Peer_N'  => NULL,
-				'Peer_SAMI' => NULL,
-				'D2D'     => 80,
-				'D2D_N'   => NULL,
-				'D2D_SAMI'    => NULL,
-				'D2D_range'    => 75
-				);
-			array_push($t_view, $t_row);
-			return $t_view;
-		}
+		// private function build_table(){
+		// 	// $values = $D2D_fetch_data -> d2d_values;
+		// 	echo 'Printing values';
+		// 	echo ($this -> values);
+		// 	$t_view = array();
+		// 	$t_row = array(
+		// 		'PCPMF'   => 'Effectiveness',
+		// 		'CoreD2D' => 'Cervical Ca screening',
+		// 		'Team'    => 70,
+		// 		'Peer'    => 75,
+		// 		'Peer_N'  => NULL,
+		// 		'Peer_SAMI' => NULL,
+		// 		'D2D'     => 80,
+		// 		'D2D_N'   => NULL,
+		// 		'D2D_SAMI'    => NULL,
+		// 		'D2D_range'    => 75
+		// 		);
+		// 	array_push($t_view, $t_row);
+		// 	return $t_view;
+		// }
 
 		public function build_chart_list(){
 

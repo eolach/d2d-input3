@@ -156,8 +156,20 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered");
 			$this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness");
 			$this -> access_labels = $d2d_data_specs -> make_chart("access");
-			$this -> integration = $d2d_data_specs -> make_chart("integration");
+			$this -> integration_labels = $d2d_data_specs -> make_chart("integration");
 
+			$this -> table_labels = $this -> make_table_labels();
+
+		}
+
+		private function make_table_labels(){
+
+			$temp_labels = array();
+			array_push($temp_labels, $this -> effectiveness_labels);
+			array_push($temp_labels, $this -> pat_centered_labels);
+			array_push($temp_labels, $this -> access_labels);
+			array_push($temp_labels, $this -> integration_labels);
+			return $temp_labels;
 		}
 
 		/**
@@ -1004,7 +1016,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			array_push($all_charts, $this -> build_simple_stats( $this -> data_qual_labels) );
 			array_push($all_charts, $this -> build_simple_stats( $this -> sami_labels) );
 			array_push($all_charts, $this -> build_peer_inds() );
-			array_push($all_charts, $this -> build_table() );
+			array_push($all_charts, $this -> build_table( $this -> table_labels ) );
 
 			
 			return $all_charts;
@@ -1168,22 +1180,29 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * Build the table using the values calculated in the d2d_fetch_data object in d2d-get-data.php
 		 * @return array(array) Array of indicator values for each of the fixed indicators in the table.
 		 */
-		private function build_table(){
+		private function build_table(array $indicator_labels){
 			// $values = $D2D_fetch_data -> d2d_values;
 			$t_view = array();
-			$t_row = array(
-				'PCPMF'   => 'Effectiveness',
-				'CoreD2D' => 'Cervical Ca screening',
-				'Team'    => 70,
-				'Peer'    => 75,
-				'Peer_N'  => NULL,
-				'Peer_SAMI' => NULL,
-				'D2D'     => 80,
-				'D2D_N'   => NULL,
-				'D2D_SAMI'    => NULL,
-				'D2D_range'    => 75
-				);
-			array_push($t_view, $t_row);
+			$pcpmf = array("Effectiveness", "Patient experience", "Access", "Integration");
+			$index = 0;
+			foreach ( $indicator_labels as $group){
+				foreach ($group as $ind) {
+					$t_row = array(
+					'PCPMF'   => $pcpmf[$index],
+					'CoreD2D' => $ind ['indicator'],
+					'Team'    => number_format( $this -> d2d_values[$ind ['short_label']]['team'][$this -> rost_all], 1),
+					'Peer'    => number_format( $this -> d2d_values[$ind ['short_label']]['peers'][$this -> rost_all], 1 ),
+					'Peer_N'  => NULL,
+					'Peer_SAMI' => NULL,
+					'D2D'     => number_format( $this -> d2d_values[$ind ['short_label']]['total'][$this -> rost_all], 1 ),
+					'D2D_N'   => NULL,
+					'D2D_SAMI'    => NULL,
+					'D2D_range'    => 75
+					);
+					array_push($t_view, $t_row);
+				}
+				$index++;
+			}
 			return $t_view;
 		}
 

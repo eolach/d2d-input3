@@ -110,19 +110,22 @@ jQuery(document).ready( function($) {
                 } else {
                      $('#d2d_instruct').html('Reviewing <em>"' + $("INPUT[name='team_code']").val() + '"</em>.');
                 }
-                var trHTML = '<tr>';
+                var trHTML;
                 var kkey;
                 var kval;
-                jsonData = response[15][0];
-                keys = Object.keys(jsonData);
-                for (i = 0; i < 10; i++){
-                    data = jsonData[keys[i]];
-                    if (data == null) {
-                        data = '';
-                    }
-                    trHTML += "<td>" + data + "</td>";
-                } 
-                $('#review_table > tbody').append(trHTML + '<tr>');
+                for (res in response[15]){
+                    trHTML = '<tr>';
+                    jsonData = response[15][res];
+                    keys = Object.keys(jsonData);
+                    for (i = 0; i < 10; i++){
+                        data = jsonData[keys[i]];
+                        if (data == null) {
+                            data = '';
+                        }
+                        trHTML += "<td>" + data + "</td>";
+                    } 
+                    $('#review_table > tbody').append(trHTML + '<tr>');
+                }
 
            }
             return false;   
@@ -236,8 +239,8 @@ jQuery(document).ready( function($) {
             $('#teams_trend').text("Click to view my team\'s data over iterations");
             $('#table').removeClass('tab active').addClass('tab');
         }
-        var tab_data = $(this).html(table_data);
-        $("#review_table > tbody:last").append("<tr><td>" + tab_data + "</td><td>Value2 </td></tr>");
+        // var tab_data = $(this).html(table_data);
+        // $("#review_table > tbody:last").append("<tr><td>" + tab_data + "</td><td>Value2 </td></tr>");
 
       })
 
