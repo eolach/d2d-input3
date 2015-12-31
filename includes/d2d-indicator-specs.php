@@ -530,7 +530,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Child Immunization - all",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/childhood-immunization/"
+					"hyperlink" => "http://www.afhto.ca/uncategorized/childhood-immunization/",
+					"iteration_limit" => -3
 					),
 				),
 
@@ -613,8 +614,10 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"css_style" => NULL,
 					"short_label" => "diabetes_core",
 					"indicator_group" => "rate",
-					"review_tab" => NULL,
-					"chart_id" => NULL
+					"review_tab" => "core_d2d_inds",
+					"chart_id" => "effectiveness",
+					"chart_label" => "Diabetes care",
+					"iteration_limit" => 3
 					),
 				),
 			
@@ -1320,16 +1323,22 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 		//  * @param  [string] $chart_name [name of the chart]
 		//  * @return [array]             [array of the short label and display label]
 		 
-		public function make_chart($chart_name){
+		public function make_chart($chart_name, $iteration){
 			$chart_array = array();
 			foreach($this -> data_specs as $spec){
-				if ($spec['specs']['chart_id'] == $chart_name ) {
-					$temp = array(
-						"indicator" => $spec['specs']['chart_label'],
-						"short_label" => $spec['specs']['short_label'],
-						"hyperlink" => $spec['specs']['hyperlink']
-						);
-					array_push($chart_array, $temp);
+				$iter_lim = $spec['specs']['iteration_limit'];
+				if ( ( $iter_lim == null) or 
+					( ( $iter_lim < 0 ) and ( ($iter_lim + $iteration )  <   0 ) ) or
+					( ( $iter_lim > 0 ) and ( ($iteration - $iter_lim )  >=  0 ) ) ) 
+					{
+					if ($spec['specs']['chart_id'] == $chart_name ) {
+						$temp = array(
+							"indicator" => $spec['specs']['chart_label'],
+							"short_label" => $spec['specs']['short_label'],
+							"hyperlink" => $spec['specs']['hyperlink']
+							);
+						array_push($chart_array, $temp);
+					}
 				}
 			}
 			return $chart_array;

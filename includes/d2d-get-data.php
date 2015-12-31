@@ -153,10 +153,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				'collaboration'
 			);
 
-			$this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered");
-			$this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness");
-			$this -> access_labels = $d2d_data_specs -> make_chart("access");
-			$this -> integration_labels = $d2d_data_specs -> make_chart("integration");
+			$iteration = 2;
+			$this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered", $iteration);
+			$this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness", $iteration);
+			$this -> access_labels = $d2d_data_specs -> make_chart("access", $iteration);
+			$this -> integration_labels = $d2d_data_specs -> make_chart("integration", $iteration);
 
 			$this -> table_labels = $this -> make_table_labels();
 
