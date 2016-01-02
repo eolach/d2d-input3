@@ -48,11 +48,29 @@ jQuery(document).ready( function($) {
                 $("[name='review_hosp_emr']").val( response[14]['hosp_emr']);
                 $("[name='review_teaching']").val( response[14]['teaching']);
                 $("[name='review_patients']").val( response[14]['num_pts']);
-                 if ($("INPUT[name='team_code']").val() == ""){
+                $("#tab2_title").html( response[16] );
+                if ($("INPUT[name='team_code']").val() == ""){
                         $('#d2d_instruct').html('Type a team code and press Enter.');
                  } else {
                      $('#d2d_instruct').html('Reviewing <em>"' + $("INPUT[name='team_code']").val() + '"</em>.');
                  }
+                $('#review_table > tbody').find("tr:gt(0)").remove();
+                var trHTML;
+                var kkey;
+                var kval;
+                for (res in response[15]){
+                    trHTML = '<tr>';
+                    jsonData = response[15][res];
+                    keys = Object.keys(jsonData);
+                    for (i = 0; i < 10; i++){
+                        data = jsonData[keys[i]];
+                        if (data == null) {
+                            data = '';
+                        }
+                        trHTML += "<td>" + data + "</td>";
+                    } 
+                    $('#review_table > tbody').append(trHTML + '<tr>');
+                }
 
            }
 
@@ -101,6 +119,7 @@ jQuery(document).ready( function($) {
                 $("[name='review_hosp_emr']").val( response[14]['hosp_emr']);
                 $("[name='review_teaching']").val( response[14]['teaching']);
                 $("[name='review_patients']").val( response[14]['num_pts']);
+                $("#tab2_title").html( response[16] );
                 // $("[name='review_patients']").val( response[14]['num_pts']);
                     // $('#team_code_val').html( response[13]['team']);
                     // $('#year_code_val').html( response[13]['year_code']);
@@ -110,6 +129,7 @@ jQuery(document).ready( function($) {
                 } else {
                      $('#d2d_instruct').html('Reviewing <em>"' + $("INPUT[name='team_code']").val() + '"</em>.');
                 }
+                
                 var trHTML;
                 var kkey;
                 var kval;

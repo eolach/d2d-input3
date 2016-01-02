@@ -7,7 +7,7 @@
  * @author Neil
  * @version 0.5
  * @created 03-June-2015 10:06 AM
- * @updated 
+ * @updated 02-Jan-2016
  */
 // Prohibit direct script loading.
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
@@ -29,6 +29,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		public $team_trend_results;
 		public $peer_results;
 		public $total_results;
+		public $iteration = 3;
 		Public $d2d_values;
 
 		public $response = 'Response';
@@ -153,7 +154,20 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				'collaboration'
 			);
 
-			$iteration = 2;
+			// $this -> make_all_labels();
+
+			// $iteration = 2;
+			// $this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered", $iteration);
+			// $this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness", $iteration);
+			// $this -> access_labels = $d2d_data_specs -> make_chart("access", $iteration);
+			// $this -> integration_labels = $d2d_data_specs -> make_chart("integration", $iteration);
+
+			// $this -> table_labels = $this -> make_table_labels();
+
+		}
+
+		private function make_all_labels( $iteration ){
+			global $d2d_data_specs;
 			$this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered", $iteration);
 			$this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness", $iteration);
 			$this -> access_labels = $d2d_data_specs -> make_chart("access", $iteration);
@@ -246,6 +260,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			if ($this -> validate_team_code()){
 
+				$this -> make_all_labels($this -> iteration);
+
 				$this -> d2d_values = $this -> build_d2d_ind_values();
 
 				$response = json_encode($this -> build_charts());
@@ -302,6 +318,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// $this -> year_code = $this -> test_vars['year_code'];
 			$this -> year_code = $peer_vars['year_code'];
 
+			// Convert year_code to number
+			$this -> iteration =  $this -> convert_year_code_to_iteration( $this -> year_code );
+
 			// $this -> hosp_emr  = $this -> test_vars['hosp_emr'];
 			$this -> hosp_emr  = $peer_vars['hosp_emr'];
 
@@ -315,6 +334,36 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// $this -> core_only = $this -> test_vars['core_only'];
 			$this -> core_only = $peer_vars['core_only'];
 
+		}
+
+		/**
+		 * Converts the string to the number inside
+		 * @param  [string] $str [year-code from post]
+		 * @return [number]      [number for use in specifying indicators for the selected iteration]
+		 */
+		private function convert_year_code_to_iteration( $str ){
+			// preg_match_all('/\d+/', $str, $matches);
+		   	// return (int)$matches[1];
+		   	switch ($str){
+		   		case "D2D 1.0":
+		   		return 1;
+		   		break;
+
+		   		case "D2D 2.0":
+		   		return 2;
+		   		break;
+
+		   		case "D2D 3.0":
+		   		return 3;
+		   		break;
+
+		   		case "D2D 4.0":
+		   		return 4;
+		   		break;
+
+
+
+		   	}
 		}
 
 		/**
@@ -412,6 +461,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				}
 
 				$results = $conn -> query( $sql_weights);
+			// Weights_levels are read from a static table named "d2d_weights_levels" in the wp database
+			// containing the weights to be assigned in calculating the quality indicators.
+			// It also includes as levels the upper and lower boundaries for each indicator.
 				$this -> weights_levels = array();
 				while ( $row = $results -> fetch_assoc( )){
 					$this -> weights_levels[] = $row;
@@ -488,15 +540,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		}
 
 
-				/**
-		 * Calculate_starfield is a 
-		 * For computational efficiency the set of composite indicators is calculated
-		 * at the same time for a given record.
-		 * @return [array] array of triplets for each of the quality composite indicators
-		 * in 'qual_drill'
-		 */
-
-
 		private function build_simple_stats( $indicator_labels ){
 			$vals = $this -> extract_indicator( $indicator_labels['short_label'], 'cost_qual', NULL);
 			
@@ -518,7 +561,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * where the sets of individual composites are passed in instead of the raw data
 		 * that otherwise would come directly from the database.
 		 * @param  [reference to array] &$val_array [the main collection of d2d-indicator values]
-		 * @param  [array] $indicator_lables [list of the indicators in this group]
+		 * @param  [array] $indicator_lables [list of the indicators in this group called "qual_inds"]
 		 * @return [nothing]  The funcion modifies the collection array by reference
 		 */
 		public function build_qual_stats( &$val_array, $indicator_labels ){
@@ -722,10 +765,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 					$running_total = 0;
 					$running_count = 0;
 					foreach( $this -> total_results as $row){
-						if ( $row[$ind_name] != 0) {
-							$running_total +=  $row[$ind_name];
-							$running_count ++;
+						if ( $row[$ind_name] == 0) {
+							$row[$ind_name] = $this -> impute_missing_data($ind_name, $this -> total_results);
 						}
+						$running_total +=  $row[$ind_name];
+						$running_count ++;
 					}
 					$temp_total1 = $running_total/( $running_count ? $running_count : 1);
 					$temp_total = number_format((float)$temp_total1, 2, '.', '');
@@ -818,6 +862,29 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			}
 			return $indicator;
+		}
+
+
+		/**
+		 * Where a datapoint is missing for a given indicator,
+		 * choose a random datapoint from the remaining valid values in the dataset
+		 * @param  [string] $ind [name of the indicator.]
+		 * @param  [array] $dataset [array of values for the dataset.]
+		 * @return [number]          [a value for the datapoing]
+		 */
+		private function impute_missing_data($ind, $dataset){
+			$valid_set = array();
+			foreach ( $dataset as $ds){
+				if ( $ds[$ind] != 0){
+					array_push($valid_set, $ds[$ind]);
+				}
+			}
+			if (count($valid_list) > 0){
+				return array_rand($valid_set, 1);
+			} else {
+				return 0;
+			}
+
 		}
 
 
@@ -925,7 +992,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$accum_total = array();
 			$accum_weight = array();
 			foreach($weights as $weights_row){
-				// Iterate over the  compositie indicators
+				// Iterate over the  composite indicators
 				// Note that the overall must be computed first
 				// since it is needed in subsequent iterations
 
@@ -1018,7 +1085,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			array_push($all_charts, $this -> build_simple_stats( $this -> sami_labels) );
 			array_push($all_charts, $this -> build_peer_inds() );
 			array_push($all_charts, $this -> build_table( $this -> table_labels ) );
-
+			array_push($all_charts, '<center><b>Core D2D ' .$this -> iteration . '.0 indicators</b></center>' );
 			
 			return $all_charts;
 		}

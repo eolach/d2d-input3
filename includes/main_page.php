@@ -6,7 +6,8 @@
 	<div class="no_chevron col-md-2 col-sm-2 col-xs-4">Iteration:
 		<select name ="year_code">
 			<option value="D2D 1.0">D2D 1.0</option>
-		<option value="D2D 2.0" selected="checked">D2D 2.0</option>
+			<option value="D2D 2.0">D2D 2.0</option>
+			<option value="D2D 3.0" selected="checked">D2D 3.0</option>
 			</select>
 	</div>
 	<div class="no_chevron col-md-1 col-sm-2 col-xs-2">Setting:

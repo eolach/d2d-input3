@@ -115,7 +115,7 @@ if ( !class_exists( 'D2D_review' ) ) {
 
 				//  Lay out the performance indicators
 				echo '<div id="tab2" class="tab">';
-					echo '<center><b>Core D2D indicators</b></center>';
+					echo '<div id="tab2_title"><center><b>Core D2D indicators X.0</b></center></div>';
 					//  Select
 					
 					// Select teams or trend

@@ -479,7 +479,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"css_style" => NULL,
 					"indicator_group" => "rate",
 					"review_tab" => "core_d2d_inds",
-					"chart_id" => "pat_centered",
+					"chart_id" => "access",
 					"chart_label" => "Reasonable wait time",
 					"hyperlink" => "http://www.afhto.ca/members-only/reasonable-wait-for-appointment"
 					)
