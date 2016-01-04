@@ -1112,6 +1112,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"value" => NULL,
 					"css_style" => NULL,
 					"indicator_group" => "rate",
+					"chart_id" => "emr_data_quality",
 					'hyperlink' => 'http://www.afhto.ca/members-only/emr-data-quality'
 					),
 				),
@@ -1124,7 +1125,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "rate"
+					"indicator_group" => "rate",
+					"chart_id" => "emr_data_quality",
 					),
 				),
 			array( "name" => "emr_q_smoking",
@@ -1136,7 +1138,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "rate"
+					"indicator_group" => "rate",
+					"chart_id" => "emr_data_quality",
 					),
 				),
 			);
