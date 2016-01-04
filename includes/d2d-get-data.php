@@ -29,6 +29,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		public $team_trend_results;
 		public $peer_results;
 		public $total_results;
+		public $peer_N = 123;
+		public $D2D_N = 456;
+		public $D2D_range = '123-126';
 		public $iteration = 3;
 		Public $d2d_values;
 
@@ -168,13 +171,13 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 		private function make_all_labels( $iteration ){
 			global $d2d_data_specs;
+
 			$this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered", $iteration);
 			$this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness", $iteration);
 			$this -> access_labels = $d2d_data_specs -> make_chart("access", $iteration);
 			$this -> integration_labels = $d2d_data_specs -> make_chart("integration", $iteration);
 
 			$this -> table_labels = $this -> make_table_labels();
-
 		}
 
 		private function make_table_labels(){
@@ -234,7 +237,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			$this -> retrieve_data_sets( 'wp' );
 
-			$this -> d2d_values = $this -> build_d2d_ind_values();
+			$this -> make_all_labels(2);
+
+			 $this -> table_labels = $this -> make_table_labels();
+
+			 $this -> d2d_values = $this -> build_d2d_ind_values();
 
 			$response = $this -> build_charts();
 
@@ -604,7 +611,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$indicator_set = array(
 				'team'  => $this -> extract_indicator( $ind_name, $ind_type, $this -> team_results ),
 				'peers' => $this -> extract_indicator( $ind_name, $ind_type, $this -> peer_results ),
-				'total' => $this -> extract_indicator( $ind_name, $ind_type, $this -> total_results )
+				'total' => $this -> extract_indicator( $ind_name, $ind_type, $this -> total_results ),
 				);
 			
 			$trends = $this -> team_trend_results;
@@ -614,8 +621,38 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				$indicator_set[ $iteration_label ] = 
 						$this -> extract_indicator( $ind_name, 'trend', $trends[$k] );
 			}
+			$indicator_set['peer_N'] = count($this -> peer_results);
+			$indicator_set['D2D_N'] = count($this -> total_results);
+			$indicator_set['D2D_range'] = $this -> find_range($this -> total_results, $ind_name);
 			return $indicator_set;
 		} 
+
+		/**
+		 * Find the range of an array of values
+		 * @param  [array] $results [array of values]
+		 * @return [string]          [Min to max values]
+		 */
+		public function find_range($results, $ind){
+			
+
+			$temp_min = 10000000;
+			$temp_max = 0;
+			foreach($results as $row){
+				$temp_values =  $this -> d2d_decode( $row[ $ind ] ) ;
+				// echo 'Values' . $temp_values['total'];
+				// print_r($temp_values);
+				// echo '</br>';
+				$temp_value = $temp_values['total'];
+			if( (!is_null($temp_value)) and ( is_numeric($temp_value))) {
+				if ( $temp_value < $temp_min) $temp_min = $temp_value;
+				if ( $temp_value > $temp_max) $temp_max = $temp_value;
+				}
+			}
+// echo 'Results';
+// print_r($this -> $results[0][$ind]);
+
+			return $temp_min . ' - ' . $temp_max;
+		}
 
 		public function check_extended_inds( $this_row ){
 			
@@ -781,7 +818,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 				case 'hex':
 
-					// Flag to catch special case of chaild immunization where
+					// Flag to catch special case of child immunization where
 					// rostered numbers are to be captured even though they are ignored elsewhere
 					$imm_flag = false;
 					if($ind_name == 'child_imm_rost'){
@@ -809,7 +846,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 						'rostered' => 0,
 						'rost_count' => 0,
 						'total' => 0,
-						'total_count' => 0
+						'total_count' => 0,
 						);
 					foreach( $temp_array as $row){
 						if ( $row['rostered'] != 0) {
@@ -836,6 +873,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 						$ind_out_array['name'] = 'child_imm_rost';
 						// echo 'Naming imm_rost' . $ind_out_array['name'] . '<br>';					
 					}
+
+					$ind_out_arr['range'] = $averages_array['rost_min'] . ' - ' . $averages_array['rost_min'];
 					
 
 					$indicator = $ind_out_array;
@@ -1197,10 +1236,18 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 */
 		private function build_trend_chart( array $indicator_labels){
 
+			// 			echo "Iteration " . $iteration . '</br>';
+
+
+			// print_r($indicator_labels);
+
 			$inds = array();
 			$vals = array();
 
 			foreach ( $indicator_labels as $ind){
+				
+
+
 				array_push($inds, $ind['indicator']);
 			//echo ' building trend for ' . $ind['indicator'] . '<br>';
 
@@ -1208,7 +1255,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				$keys = array_keys($this -> d2d_values[$ind ['short_label']]);
 				$val_array = array();
 				foreach($keys as $k){
-					if( substr($k, 0, 3) == 'D2D'){
+					if( substr($k, 0, 4) == 'D2D '){
 						$val_array[ $k ] = $this -> d2d_values[$ind ['short_label']][$k]['total'];
 					}
 				}
@@ -1221,8 +1268,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 					'indicator' => $inds[$k],
 					'd2d_1' => $vals[$k]['D2D 1.0'] *100,
 					'd2d_2' => $vals[$k]['D2D 2.0'],
-					'd2d_3' => NULL,
-					'd2d_4' => NULL,
+					'd2d_3' => $vals[$k]['D2D 3.0'],
+					'd2d_4' => $vals[$k]['D2D 4.0']
 					);
 				array_push($chart_array,  $temp_array);
 			}
@@ -1260,12 +1307,12 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 					'CoreD2D' => $ind ['indicator'],
 					'Team'    => number_format( $this -> d2d_values[$ind ['short_label']]['team'][$this -> rost_all], 1),
 					'Peer'    => number_format( $this -> d2d_values[$ind ['short_label']]['peers'][$this -> rost_all], 1 ),
-					'Peer_N'  => NULL,
+					'Peer_N'  => $this -> d2d_values[$ind ['short_label']]['peer_N'],
 					'Peer_SAMI' => NULL,
 					'D2D'     => number_format( $this -> d2d_values[$ind ['short_label']]['total'][$this -> rost_all], 1 ),
-					'D2D_N'   => NULL,
-					'D2D_SAMI'    => NULL,
-					'D2D_range'    => 75
+					'D2D_N'   => $this -> d2d_values[$ind ['short_label']]['D2D_N'],
+					'D2D_SAMI'  => NULL,
+					'D2D_range'  => $this -> d2d_values[$ind ['short_label']]['D2D_range']
 					);
 					array_push($t_view, $t_row);
 				}

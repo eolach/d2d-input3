@@ -1,23 +1,26 @@
 
 		<!-- first row -->
-	<div class="no_chevron col-md-12 col-sm-12 col-xs-12"><input type="text" class="new_code" name="team_code" value="" size="11" align="right">&nbsp;Type team code and press Enter</div>
+	<div class="no_chevron col-md-8 col-sm-12 col-xs-12">
+		<input type="text" 
+		class="new_code" name="team_code" value="" size="11" align="right">&nbsp;Type team code and press <b>Enter</b></div>
 	<!-- <hr style="height: 0px; width: 99%; margin:0 auto;line-height:2px;background-color: #848484; border:0 none;"/> -->
 		<!-- Left hand box -->
-	<div class="no_chevron col-md-2 col-sm-2 col-xs-4">Iteration:
-		<select name ="year_code">
+	<div class="no_chevron col-md-4 col-sm-12 col-xs-12">
+		Iteration:	<select name ="year_code">
 			<option value="D2D 1.0">D2D 1.0</option>
 			<option value="D2D 2.0">D2D 2.0</option>
 			<option value="D2D 3.0" selected="checked">D2D 3.0</option>
 			</select>
 	</div>
-	<div class="no_chevron col-md-1 col-sm-2 col-xs-2">Setting:
+	<div class="no_chevron col-md-6 col-sm-3 col-xs-3">
+	<div >Setting:
 		<select name="review_setting">
 			<option value="none" selected="checked">--</option>
 			<option value="Urban">Urban</option>
 			<option value="Rural">Rural</option>
 		</select>	
 	</div>
-	<div class="no_chevron col-md-1 col-sm-2 col-xs-2">Teaching:
+	<div >Teaching:
 		<select name="review_teaching">
 			<option value="none" selected="checked">--</option>
 			<option value="Academic" >Academic</option>
@@ -25,45 +28,41 @@
 			<option value="Non-teaching">Non-tchg</option>
 		</select>
 	</div>
-	<div class="no_chevron col-md-1 col-sm-2 col-xs-2">Access to hospital discharge data:</li>
+	<div >Access to hosp. discharge data:</li>
 		<select name="review_hosp_emr">
 			<option value="none" selected="checked">--</option>
 			<option value="No" >No</option>
 			<option value="Yes">Yes</option>
 		</select>	
 	</div>
-	<div class="no_chevron col-md-1 col-sm-2 col-xs-2">Number of rostered patients:</li>
-		</ul><ul>
-			<li><select name="review_patients">
+	<div>Rostered patients:</li>
+		<select name="review_patients">
 					<option value="none" >--</option>
 					<option value="lt_10k" >Fewer than 10,000</option>
 					<option value="10k_30k">10,000 to 30,000</option>
 					<option value="gt_30k">More than 30,000</option>
 				</select>
-			</li>
-		</ul>
 	</div>
-	<div class="d2d_review_table" style="width:40%; float:left">
-		<table style="width:250px" border="0">
+</div>
+	<div class="d2d_review_table col-md-6 col-sm-4 col-xs-4" ><!--style="width:40%; float:left"> -->
+		<table ><!--style="width:250px" border="0"-->
 		<tr>
 			<td></td>
-			<td>SAMI</td>
-			<td>Data quality</td>
+			<td>Team</td>
+			<td>Peer</td>
+			<td>D2D</td>
 		</tr>
 		  <tr>
-		    <td>Team</td>
-		    <td id="team_qual_score">--</td> 
+		    <td>SAMI</td>
 		    <td id="team_sami_score">--</td>
-		  </tr>
-		  <tr>
-		    <td>Peer</td>
-		    <td id="peer_qual_score">--</td> 
 		    <td id="peer_sami_score">--</td>
-		  <tr>
-		    <td>D2D</td>
-		    <td id="total_qual_score">--</td> 
 		    <td id="total_sami_score">--</td>
 		  </tr>
+		  <tr>
+		    <td>Data Quality</td>
+		    <td id="team_qual_score">--</td> 
+		    <td id="peer_qual_score">--</td> 
+		    <td id="total_qual_score">--</td> 
 		</table>	
 	</div>
 
