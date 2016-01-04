@@ -53,13 +53,13 @@
 			<td>D2D</td>
 		</tr>
 		  <tr>
-		    <td>SAMI</td>
+		    <td><a href="http://www.afhto.ca/members-only/sami-score/ ">SAMI</td>
 		    <td id="team_sami_score">--</td>
 		    <td id="peer_sami_score">--</td>
 		    <td id="total_sami_score">--</td>
 		  </tr>
 		  <tr>
-		    <td>Data Quality</td>
+		    <td><a  href = 'http://www.afhto.ca/members-only/emr-data-quality '>Data Quality</td>
 		    <td id="team_qual_score">--</td> 
 		    <td id="peer_qual_score">--</td> 
 		    <td id="total_qual_score">--</td> 

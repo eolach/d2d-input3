@@ -430,7 +430,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"db_type" => "DOUBLE",
 					"value" => NULL,
 					"css_style" => NULL,
-					"indicator_group" => "data"
+					"indicator_group" => "data",
+					"hyperlink" => "http://www.afhto.ca/members-only/sami-score/ "
 					)
 				),
 
@@ -449,7 +450,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "pat_centered",
 					"chart_label" => "Patient Involved",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/patient-experience-involved/"
+					"hyperlink" => "http://www.afhto.ca/members-only/patient-experience-involved/"
 					)
 				),
 			array( "name" => "courtesy",
@@ -465,7 +466,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "pat_centered",
 					"chart_label" => "Courtesy of staff",
-					"hyperlink" => "http://www.afhto.ca/members-only/pt-satisfaction-with-office-staff"
+					"hyperlink" => "http://www.afhto.ca/members-only/pt-satisfaction-with-office-staff/"
 					)
 				),
 			array( "name" => "reas_wait",
@@ -481,7 +482,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "access",
 					"chart_label" => "Reasonable wait time",
-					"hyperlink" => "http://www.afhto.ca/members-only/reasonable-wait-for-appointment"
+					"hyperlink" => "http://www.afhto.ca/members-only/reasonable-wait-for-appointment/"
 					)
 				),
 		//   - effectiveness
@@ -498,7 +499,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Colorectal ca screening",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/colorectal-cancer-screening/"
+					"hyperlink" => "http://www.afhto.ca/members-only/colorectal-cancer-screening/ "
 					),
 				),
 			array( "name" => "cervical_ca_ices",
@@ -514,7 +515,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Cervical ca screening",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/cervical-cancer-screening/"
+					"hyperlink" => "http://www.afhto.ca/members-only/cervical-cancer-screening/"
 					),
 				),
 			array( "name" => "child_imm",
@@ -530,7 +531,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Child Immunization - all",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/childhood-immunization/",
+					"hyperlink" => "http://www.afhto.ca/members-only/childhood-immunization/ ",
 					"iteration_limit" => -3
 					),
 				),
@@ -565,7 +566,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "access",
 					"chart_label" => "Reg provider - ind",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/regular-primary-care-provider/"
+					"hyperlink" => "http://www.afhto.ca/members-only/regular-primary-care-provider/"
 					),
 				),
 			array( "name" => "primary_prov_team",
@@ -581,7 +582,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "access",
 					"chart_label" => "Reg provider - team",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/regular-primary-care-provider/"
+					"hyperlink" => "http://www.afhto.ca/members-only/regular-primary-care-provider/"
 					),
 				),
 			
@@ -599,7 +600,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "integration",
 					"chart_label" => "Readmission to hospital",
-					"hyperlink" => "http://www.afhto.ca/uncategorized/readmissions-to-hospital/"
+					"hyperlink" => "http://www.afhto.ca/members-only/readmissions-to-hospital/"
 					),
 				),
 
@@ -617,7 +618,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Diabetes care",
-					"iteration_limit" => 3
+					"iteration_limit" => 3,
+					"hyperlink" => "http://www.afhto.ca/members-only/collaborative-patient-care/health-promotion-cdpm/diabetes-care/"
 					),
 				),
 			

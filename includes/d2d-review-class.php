@@ -5,7 +5,7 @@
  * @author Neil
  * @version 0.5
  * @created 17-Apr-2015 8:54:10 PM
- * @updated 15-May-2015
+ * @updated 03-Jan-2016
  */
 // Prohibit direct script loading.
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );

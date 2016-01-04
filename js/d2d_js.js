@@ -30,7 +30,7 @@ jQuery(document).ready( function($) {
                 // alert("Team code " + response["team_code"] + ' not found');
                 $('#d2d_instruct').html('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
              } else {      
-                 alert("table 1 " + response[15]);
+                 // alert("table 1 " + response[15]);
                for (i = 0; i < 12 ; i++){
                 var this_chart =  eval('amchart' + (i + 1));
                 this_chart.dataProvider = response[i];
@@ -110,7 +110,7 @@ jQuery(document).ready( function($) {
                 // alert("Team code " + response["team_code"] + ' not found');
             $('#d2d_instruct').html('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
              } else {      
-                alert("table 2" + response[15]['Team']);
+                // alert("table 2" + response[15]['Team']);
                 for (i = 0; i < 12 ; i++){
                 var this_chart =  eval('amchart' + (i + 1));
                 this_chart.dataProvider = response[i];

@@ -56,69 +56,84 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 		private $qual_rollup_labels = array(
 				'indicator' => "Quality",
-				'short_label' => 'overall'
+				'short_label' => 'overall',
+				'hyperlink' =>'http://www.afhto.ca/members-only/quality-roll-up-indicator-measuring-the-quality-of-comprehensive-primary-care/'
 		);
 
 		private $cost_rollup_labels = array(
 				'indicator' => "Cost (adjusted)",
-				'short_label' => 'cost_adj'
+				'short_label' => 'cost_adj',
+				'hyperlink' => 'http://www.afhto.ca/members-only/cost/'
 		);
 
 		private $qual_drill_labels = array(
 			array(
 				'indicator' => "overall",
-				'short_label' => 'overall'
+				'short_label' => 'overall',
+				'hyperlink' => 'http://www.afhto.ca/wp-content/uploads/Quality-roll-up-Indicator-FAQ-and-6-domains.pdf'
 				),
 			array(
 				'indicator' => "Access",
-				'short_label' => 'access'
+				'short_label' => 'access',
+				'hyperlink' => 'http://www.afhto.ca/wp-content/uploads/Quality-roll-up-Indicator-FAQ-and-6-domains.pdf'
 				),
 			array(
 				'indicator' => "Sensitivity",
-				'short_label' => 'sensitivity'
+				'short_label' => 'sensitivity',
+				'hyperlink' => 'http://www.afhto.ca/wp-content/uploads/Quality-roll-up-Indicator-FAQ-and-6-domains.pdf'
 				),
 			array(
 				'indicator' => "Trust",
-				'short_label' => 'trust'
+				'short_label' => 'trust',
+				'hyperlink' => 'http://www.afhto.ca/wp-content/uploads/Quality-roll-up-Indicator-FAQ-and-6-domains.pdf'
 				),
 			array(
 				'indicator' => "Knowledge",
-				'short_label' => 'knowledge'
+				'short_label' => 'knowledge',
+				'hyperlink' => 'http://www.afhto.ca/wp-content/uploads/Quality-roll-up-Indicator-FAQ-and-6-domains.pdf'
 				),
 			array(
 				'indicator' => "Commitment",
-				'short_label' => 'commitment'
+				'short_label' => 'commitment',
+				'hyperlink' => 'http://www.afhto.ca/wp-content/uploads/Quality-roll-up-Indicator-FAQ-and-6-domains.pdf'
 				),
 			array(
 				'indicator' => "Collaboration",
-				'short_label' => 'collaboration'
+				'short_label' => 'collaboration',
+				'hyperlink' => 'http://www.afhto.ca/wp-content/uploads/Quality-roll-up-Indicator-FAQ-and-6-domains.pdf'
 				)
 		);
 
 		private $cost_drill_labels = array(
 			array(
 				'indicator' => "Total cost",
-				'short_label' => 'cost'
+				'short_label' => 'cost',
+				'hyperlink' => 'http://www.afhto.ca/members-only/cost/'
 				),
 			array(
 				'indicator' => "Cost (adjusted)",
-				'short_label' => 'cost_adj'
+				'short_label' => 'cost_adj',
+				'hyperlink' => ''
 				),
 			array(
 				'indicator' => "Primary care",
-				'short_label' => 'cost_prim'
+				'short_label' => 'cost_prim',
+				'hyperlink' => ''
 				),
 			array(
 				'indicator' => "Services",
-				'short_label' => 'cost_serv'
+				'short_label' => 'cost_serv',
+				'hyperlink' => ''
 				),
 			array(
 				'indicator' => "Settings",
-				'short_label' => 'cost_settings'
+				'short_label' => 'cost_settings',
+				'hyperlink' => ''
 				),
 			array(
 				'indicator' => "Institutions",
-				'short_label' => 'cost_inst'
+				'short_label' => 'cost_inst',
+				'hyperlink' => ''
 				)
 		);
 
@@ -138,7 +153,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		
 		private $sami_labels = array(
 				'indicator' => "Team quality",
-				'short_label' => 'sami_score'
+				'short_label' => 'sami_score',
+				'hyperlink' => 'http://www.afhto.ca/members-only/sami-score/'
 			);
 
 	// Constructor and utilities
