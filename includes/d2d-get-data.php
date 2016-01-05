@@ -448,7 +448,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$sql_total = 'SELECT * FROM indicators WHERE save_status = "locked" AND
 				year_code =  "' . $this -> year_code  . '"';
 
-			$sql_weights = 'SELECT * FROM d2d_weights_levels';
+			// $sql_weights = 'SELECT * FROM d2d_weights_levels';
+			$sql_weights = 'SELECT * FROM d2d_weights3_0';
 
 			// Choose db connection context
 			//
