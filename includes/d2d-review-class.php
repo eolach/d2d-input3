@@ -196,7 +196,9 @@ if ( !class_exists( 'D2D_review' ) ) {
 					echo '<div id="table" class="tab">';
 
 					echo '<table id="review_table">';
-					echo '<thead><tr><th >PCPMF Domain</th>
+					echo '<thead><tr><th>
+					<a href="http://www.hqontario.ca/Portals/0/documents/pr/pc-performance-measurement-framework-130828-en.pdf">
+					PCPMF Domain</th>
 					<th>Core D2D indicators</th>
 					<th>Team</th>
 					<th>Peer</th>

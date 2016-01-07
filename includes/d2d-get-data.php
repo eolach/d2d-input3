@@ -1177,8 +1177,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			array_push( $all_charts, $this -> build_trend_chart( $this -> effectiveness_labels, 'hex' ) );
 			array_push( $all_charts, $this -> build_trend_chart( $this -> access_labels, 'hex' ) );
 			array_push( $all_charts, $this -> build_trend_chart( $this -> integration_labels, 'hex' ) );
-			array_push( $all_charts, $this -> build_simple_stats( $this -> data_qual_labels ) );
 			array_push( $all_charts, $this -> build_simple_stats( $this -> sami_labels ) );
+			array_push( $all_charts, $this -> build_simple_stats( $this -> data_qual_labels ) );
 			array_push( $all_charts, $this -> build_peer_inds() );
 			array_push( $all_charts, $this -> build_table( $this -> table_labels ) );
 			array_push( $all_charts, '<center><b>Core D2D ' .$this -> iteration . '.0 indicators</b></center>' );
