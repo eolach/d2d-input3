@@ -1142,7 +1142,25 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"chart_id" => "emr_data_quality",
 					),
 				),
-			);
+// This is a template for a new indicator.
+// For test pusposes, the name is set to "email_rcpt", since this is an unused indicator
+// in the "indicator" table in the database. 
+// In adding a new indicator, a new vaiaable should be added to the "indicator" table in the database.
+			// array( "name" => "email_rcpt",
+			// 	"specs" => array(
+			// 		"indicator_class" => "simple",
+			// 		"full_label" => "Testing new indicator",
+			// 		"short_label" => "email_rcpt",
+			// 		"menu_class" => NULL,
+			// 		"db_type" => "DOUBLE",
+			// 		"value" => NULL,
+			// 		"css_style" => NULL,
+			// 		"indicator_group" => "rate",
+			// 		"chart_id" => "access",
+			// 		"chart_label" => "Test indicator",
+			// 		),
+			// 	),
+ );
 
 			function __construct(){
 

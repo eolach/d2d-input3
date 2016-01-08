@@ -110,6 +110,10 @@ jQuery(document).ready( function($) {
                 // alert("Team code " + response["team_code"] + ' not found');
             $('#d2d_instruct').html('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
              } else {      
+                
+                $("INPUT[name='team_code']").blur();
+                $("select").blur();
+
                 // alert("table 2" + response[15]['Team']);
                 for (i = 0; i < 12 ; i++){
                 var this_chart =  eval('amchart' + (i + 1));
@@ -139,6 +143,7 @@ jQuery(document).ready( function($) {
                      $('#d2d_instruct').html('Reviewing <em>"' + $("INPUT[name='team_code']").val() + '"</em>.');
                 }
                 
+                $('#review_table > tbody').find("tr:gt(0)").remove();
                 var trHTML;
                 var kkey;
                 var kval;

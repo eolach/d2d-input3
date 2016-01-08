@@ -74,7 +74,7 @@
         <li class="inactive"><a class="d2d" href="#tab2">Core D2D</a></li>
 <!--     </ul>
     <ul class="tab-extra">
--->	    <li class="d2d-extra"><a class="d2d-ext" target="_blank" href="http://www.afhto.ca/members-only/exploratory-indicator">Time spent</a></li>
+-->	    <li class="d2d-extra"><a class="d2d-ext" target="_blank" href="http://www.afhto.ca/members-only/d2d-exploratory-indicator">Time spent</a></li>
         <li class="d2d-extra"><a class="d2d-ext" target="_blank" href="http://www.afhto.ca/members-only/comparative-data-for-d2d/">Comparative data</a></li>
     </div>
 

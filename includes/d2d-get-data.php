@@ -229,7 +229,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [type] [description]
 		 */
 		public function test_get_data() {
-			echo 'Validated php <br>';
+			echo 'Testing data response <br>';
 
 			$this -> read_post( $this -> test_vars );
 
@@ -253,16 +253,19 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [type] [description]
 		 */
 		public function test_wp_get_data() {
-			echo 'Confirmed valid php <br>';
+			echo 'Testing  response <br>';
+
 			$this -> read_post( $this -> test_vars );
 
 			$this -> retrieve_data_sets( 'wp' );
 
-			$this -> make_all_labels( 2 );
+			$this -> make_all_labels( 3 );
 
 			$this -> table_labels = $this -> make_table_labels();
 
 			$this -> d2d_values = $this -> build_d2d_ind_values();
+
+			// $this -> save_quality_indicators();
 
 			$response = $this -> build_charts();
 
@@ -293,6 +296,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 				$this -> d2d_values = $this -> build_d2d_ind_values();
 
+				// if ($this -> team_code == "qwerty"){
+				// 	// $this -> save_quality_indicators();
+				// 	$this -> team_code = 'Q saved';
+				// }
+
 				$response = json_encode( $this -> build_charts() );
 			} else {
 				$fail_response = array(
@@ -306,10 +314,10 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		}
 
 		public $test_vars = array(
-			'team_code' => '#RWER07',
+			'team_code' => 'gregtest9',
 			'setting' => 'Urban',
 			'teaching' => 'Non-teaching',
-			'year_code' => 'D2D 2.0',
+			'year_code' => 'D2D 3.0',
 			'hosp_emr' => 'Yes',
 			'num_pts' => '10k_30k',
 			'rost_all' => 'total',
@@ -522,12 +530,15 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// echo  '<br><br>' . $this -> hosp_emr . ' <br>';
 			// echo  '<br><br>' . $this -> num_pts . ' <br>';
 			// echo  '<br><br>Peer results: <br>';
-			// print_r($this -> peer_results );
+			// print_r($this -> weights_levels );
 		}
 
 
 		private function validate_team_code( ) {
-			if ( ( $this -> team_code == NULL ) ||( $this -> team_code == "" ) || ( count( $this -> team_results ) > 0 )  ) {
+			if ( ( $this -> team_code == NULL ) 
+				||( $this -> team_code == "" ) 
+				||( $this -> team_code == "qwerty" ) 
+				|| ( count( $this -> team_results ) > 0 )  ) {
 				$this -> quality_agree = $this -> team_results[0]['quality_agree'];
 				// $this -> setting = $this -> team_results[0]['setting'];
 				// $this -> teaching = $this -> team_results['teaching'];
@@ -557,6 +568,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			foreach ( $this -> core_d2d_inds as $ind ) {
 				$values_array[ $ind ] = $this -> build_stats( $ind, 'hex' );
 			}
+			// echo "</br>values_array </br>";
 			// print_r($values_array);
 
 			// Compute Cost
@@ -571,6 +583,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$this -> build_qual_stats( $values_array, $this -> qual_inds );
 
 			return $values_array;
+						print_r($values_array);
+
 		}
 
 
@@ -619,6 +633,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [nothing]  The funcion modifies the collection array by reference
 		 */
 		public function build_qual_stats( &$val_array, $indicator_labels ) {
+// echo "Building quality " . count($indicator_labels) . "</br>";
 			// This first pass retrieves a set of triplets for each of the team, peer and
 			// total indicators
 			$temp_ind_set = array(
@@ -629,6 +644,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// This secord pass distributes the tripets to each of the
 			// respective composite indicators
 			foreach ( $indicator_labels as $ind ) {
+// echo "Processing " . $ind . "</br>";
 				$indicator_set = array(
 					'team'  => $temp_ind_set['team'][ $ind ],
 					'peers' => $temp_ind_set['peers'][ $ind ],
@@ -636,9 +652,10 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				);
 				$val_array[ $ind ] = $indicator_set;
 			}
-			// print_r($val_array);
+// echo "</br>val_array </br>";
+// print_r($val_array);
 
-			//  return;
+			 return;
 		}
 
 		/**
@@ -699,8 +716,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			}
 			// echo 'Results';
 			// print_r($this -> $results[0][$ind]);
-
-			return $temp_min . ' - ' . $temp_max;
+			if ($temp_min == 10000000 ){
+				return ("---");
+			} else {
+				return $temp_min . ' - ' . $temp_max;
+			}
 		}
 
 		public function check_extended_inds( $this_row ) {
@@ -748,6 +768,10 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			$indicator = NULL;
 
+			if ($ind_name == "diabetes_care"){
+				$ind_type = 'hex';
+			}
+
 			switch ( $ind_type ) {
 
 			case 'cost_drill':
@@ -794,9 +818,14 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 						// and is the extended data flag set?
 						if ( $this -> check_extended_inds( $row ) ) {
 							$temp_entry =  $this -> calculate_starfield( $ind_name, $row ) ;
+// echo "qual_drill array : </br>";
+// print_R($temp_entry);
+// echo "End </br>";
 							array_push( $temp_array, $temp_entry );
 						}
 					}
+
+
 				} else {
 					array_push( $temp_array, NULL );
 				}
@@ -870,6 +899,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			case 'hex':
 
+
 				// Flag to catch special case of child immunization where
 				// rostered numbers are to be captured even though they are ignored elsewhere
 				$imm_flag = false;
@@ -885,7 +915,15 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				$temp_array = array();
 				if ( count( $ind_array ) > 0 ) {
 					foreach ( $ind_array as $row ) {
-						$temp_entry = $this -> d2d_decode( $row[ $ind_name ] ) ;
+
+						if ($ind_name == "diabetes_core"){
+							$temp_entry = array(
+								'total' => $row[ $ind_name ],
+								'rostered' => 55 //$row[ $ind_name ]
+							);
+						} else {
+							$temp_entry = $this -> d2d_decode( $row[ $ind_name ] ) ;
+						}
 						array_push( $temp_array, $temp_entry );
 					}
 				} else {
@@ -965,17 +1003,17 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [number]          [a value for the datapoing]
 		 */
 		private function impute_missing_data( $ind, $dataset ) {
-			$valid_set = array();
-			foreach ( $dataset as $ds ) {
-				if ( $ds[$ind] != 0 ) {
-					array_push( $valid_set, $ds[$ind] );
-				}
-			}
-			if ( count( $valid_list ) > 0 ) {
-				return array_rand( $valid_set, 1 );
-			} else {
+			// $valid_set = array();
+			// foreach ( $dataset as $ds ) {
+			// 	if ( $ds[$ind] != 0 ) {
+			// 		array_push( $valid_set, $ds[$ind] );
+			// 	}
+			// }
+			// if ( count( $valid_list ) > 0 ) {
+			// 	return array_rand( $valid_set, 1 );
+			// } else {
 				return 0;
-			}
+			// }
 
 		}
 
@@ -1020,8 +1058,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$password ='jeQiRPIT';
 			$dbname = 'wordpress1';
 			$conn = new mysqli( $servername, $username, $password, $dbname );
-
-
 			foreach ( $this -> total_results as $team ) {
 				// echo $team['team_code'] . '<br>';
 				$temp_array = array();
@@ -1037,8 +1073,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// Write to the database
 				$temp_code = $team["team_code"];
 
-				$sql = 'INSERT INTO d2d_qual_results (team_code, overall, access, sensitivity, trust, knowledge,
-					commitment, collaboration) VALUES ("'. $temp_code . '", ' .
+				$sql = 'INSERT INTO d2d_qual_results (team_code, iteration, overall, access, sensitivity, trust, knowledge,
+					commitment, collaboration) VALUES ("'. $temp_code . '", "'. $temp_code . '" , "' .
 					$temp_array["overall"] . ', ' .
 					$temp_array["access"] . ', ' .
 					$temp_array["sensitivity"] . ', ' .
@@ -1052,7 +1088,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				if ( $conn->query( $sql ) === TRUE ) {
 					echo "New record created successfully";
 				} else {
-					echo "Error: " . $sql . "<br>" . $conn->error;
+					echo "Error: " .  "<br>" . $conn -> error;
 				}
 			}
 			//
@@ -1082,7 +1118,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 */
 		public function calculate_starfield( $indicator_labels, $result_row ) {
 			$weights = $this -> weights_levels; // Directly from the databse
-
+// echo "Weights " . count($weights);
 			$temp_array = array();
 			$accum_total = array();
 			$accum_weight = array();
@@ -1097,6 +1133,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// if (use_extended_indicator){
 
 				foreach ( $indicator_labels as $composite ) { //Steps through all the composite indicators
+// echo "Starfield for " . $composite . ": </br>";
+// print_R($temp_entry);
+// echo "End </br>";
 					$active_inds = 0;
 					$mounting_total  = 0;
 					$mounting_weight = 0;
@@ -1364,7 +1403,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				foreach ( $group as $ind ) {
 					$t_row = array(
 						'PCPMF'   => $pcpmf[$index],
-						'CoreD2D' => $ind ['indicator'],
+						'CoreD2D' => '<a href= "' . $ind["hyperlink"] . '">' . $ind ['indicator'] ,
 						'Team'    => number_format( $this -> d2d_values[$ind ['short_label']]['team'][$this -> rost_all], 1 ),
 						'Peer'    => number_format( $this -> d2d_values[$ind ['short_label']]['peers'][$this -> rost_all], 1 ),
 						'Peer_N'  => $this -> d2d_values[$ind ['short_label']]['peer_N'],
@@ -1380,10 +1419,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			}
 			return $t_view;
 		}
-
-
-
-
 
 	}
 }
