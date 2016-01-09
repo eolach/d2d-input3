@@ -1,7 +1,7 @@
 
 		<!-- first row -->
 	<div class="no_chevron col-md-8 col-sm-12 col-xs-12">
-		<input type="text" 
+		<input type="text" id="code_here"
 		class="new_code" name="team_code" value="" size="11" align="right">&nbsp;Type team code and press <b>Enter</b></div>
 	<!-- <hr style="height: 0px; width: 99%; margin:0 auto;line-height:2px;background-color: #848484; border:0 none;"/> -->
 		<!-- Left hand box -->

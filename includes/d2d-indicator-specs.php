@@ -531,8 +531,8 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 					"review_tab" => "core_d2d_inds",
 					"chart_id" => "effectiveness",
 					"chart_label" => "Child Immunization - all",
-					"hyperlink" => "http://www.afhto.ca/members-only/childhood-immunization/ ",
-					"iteration_limit" => -3
+					"hyperlink" => "http://www.afhto.ca/members-only/childhood-immunization/ "
+					// "iteration_limit" => -3
 					),
 				),
 

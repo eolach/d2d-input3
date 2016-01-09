@@ -253,7 +253,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [type] [description]
 		 */
 		public function test_wp_get_data() {
-			echo 'Testing  response <br>';
+			echo "Saving quality data";
 
 			$this -> read_post( $this -> test_vars );
 
@@ -265,11 +265,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			$this -> d2d_values = $this -> build_d2d_ind_values();
 
-			// $this -> save_quality_indicators();
+			$this -> exportQualityToCSV();
 
-			$response = $this -> build_charts();
+			// $response = $this -> build_charts();
 
-			print_r( $response );
+			// print_r( $response );
 
 			return $response;
 		}
@@ -296,10 +296,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 				$this -> d2d_values = $this -> build_d2d_ind_values();
 
-				// if ($this -> team_code == "qwerty"){
-				// 	// $this -> save_quality_indicators();
-				// 	$this -> team_code = 'Q saved';
-				// }
 
 				$response = json_encode( $this -> build_charts() );
 			} else {
@@ -535,9 +531,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 
 		private function validate_team_code( ) {
+			// if (  $this -> team_code == "saveQuality" ){
+			// 	$this -> exportQualityToCSV();
+			// }
 			if ( ( $this -> team_code == NULL ) 
-				||( $this -> team_code == "" ) 
-				||( $this -> team_code == "qwerty" ) 
+				||( $this -> team_code == "" )
 				|| ( count( $this -> team_results ) > 0 )  ) {
 				$this -> quality_agree = $this -> team_results[0]['quality_agree'];
 				// $this -> setting = $this -> team_results[0]['setting'];
@@ -593,30 +591,43 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// If this is the emr data quality indicator,
 			// Find the average of the indicators in the group
 			if ( is_null( $indicator_labels['short_label'] )  ) {
-				$vals = array( 0, 0, 0);
 				$count_val = count( $indicator_labels);
-				foreach ( $indicator_labels as $ind){
-					$temp_val = $this -> extract_indicator( $ind['short_label'], 'cost_qual', NULL );
-					$k = array_keys($temp_val);
-					for ($i = 0; $i < 3; $i++){
-						$vals[$i] += $temp_val[$k[$i]];
-					}
-			$indicator = array(
-					'team'  => number_format( $vals[0] / $count_val, 2 ),
-					'peers' => number_format( $vals[1] / $count_val, 2 ),
-					'total' => number_format( $vals[2] / $count_val, 2 )
-				);
+				$top_vals = array( 
+					'team' => 0 , 
+					'peers' => 0, 
+					'total' => 0
+					);
+				$low_vals = array();
+
+				foreach ($indicator_labels as $ind){
+					$ind_k = $ind['short_label'];
+					$low_val = $this -> extract_indicator( $ind_k, 'cost_qual', NULL ); 
+					$low_vals[] = array(
+						'team'  => $low_val[0],
+						'peers' => $low_val[1],
+						'total' => $low_val[2]
+						);
 				}
+
+				$keys = array_keys($top_vals);
+
+				foreach ($keys as $k) {
+					for($i = 0; $i < 3; $i++){
+				// 	// foreach ($inds_k as $ik){
+						$top_vals[$k] = $top_vals[$k] + $low_vals[$i][$k];
+					}
+					$top_vals[$k] = number_format( $top_vals[$k]/$count_val, 2 );				}
+
 			} else {   
 				$vals = $this -> extract_indicator( $indicator_labels['short_label'], 'cost_qual', NULL );
 
-				$indicator = array(
+				$top_vals = array(
 					'team'  => number_format( $vals[0], 2 ),
 					'peers' => number_format( $vals[1], 2 ),
 					'total' => number_format( $vals[2], 2 )
 				);
 			}
-			return $indicator;
+			return $top_vals;
 		}
 
 
@@ -633,7 +644,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [nothing]  The funcion modifies the collection array by reference
 		 */
 		public function build_qual_stats( &$val_array, $indicator_labels ) {
-// echo "Building quality " . count($indicator_labels) . "</br>";
+			// echo "Building quality " . count($indicator_labels) . "</br>";
 			// This first pass retrieves a set of triplets for each of the team, peer and
 			// total indicators
 			$temp_ind_set = array(
@@ -644,7 +655,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// This secord pass distributes the tripets to each of the
 			// respective composite indicators
 			foreach ( $indicator_labels as $ind ) {
-// echo "Processing " . $ind . "</br>";
+				// echo "Processing " . $ind . "</br>";
 				$indicator_set = array(
 					'team'  => $temp_ind_set['team'][ $ind ],
 					'peers' => $temp_ind_set['peers'][ $ind ],
@@ -652,8 +663,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				);
 				$val_array[ $ind ] = $indicator_set;
 			}
-// echo "</br>val_array </br>";
-// print_r($val_array);
+			// echo "</br>val_array </br>";
+			// print_r($val_array);
 
 			 return;
 		}
@@ -704,11 +715,15 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$temp_min = 10000000;
 			$temp_max = 0;
 			foreach ( $results as $row ) {
-				$temp_values =  $this -> d2d_decode( $row[ $ind ] ) ;
+				if ($ind == 'diabetes_core'){
+					$temp_value =  $row[ $ind ];
+				}else {
+					$temp_values =  $this -> d2d_decode( $row[ $ind ] ) ;
+					$temp_value = $temp_values['total'];
+				}
 				// echo 'Values' . $temp_values['total'];
 				// print_r($temp_values);
 				// echo '</br>';
-				$temp_value = $temp_values['total'];
 				if ( ( !is_null( $temp_value ) ) and ( is_numeric( $temp_value ) ) ) {
 					if ( $temp_value < $temp_min ) $temp_min = $temp_value;
 					if ( $temp_value > $temp_max ) $temp_max = $temp_value;
@@ -803,6 +818,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				break;
 
 			case 'qual_drill':
+// echo "qual_drill array : </br>";
+// print_r($ind_array);
 
 				$temp_return = array();
 				// this will extract all the indicators in the array passed in as $ind_name
@@ -816,11 +833,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 						// Test if this row is to be included
 						// i.e., does it contain extended data,
 						// and is the extended data flag set?
+// echo 'row ' . $row['team_code'] . '</br>';
 						if ( $this -> check_extended_inds( $row ) ) {
 							$temp_entry =  $this -> calculate_starfield( $ind_name, $row ) ;
-// echo "qual_drill array : </br>";
-// print_R($temp_entry);
-// echo "End </br>";
 							array_push( $temp_array, $temp_entry );
 						}
 					}
@@ -832,6 +847,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 				// For each of the composite indicators
 				foreach ( $ind_name as $ind ) {
+// echo 'ind ' . $ind . '</br>';
 					$running_total = 0;
 					$running_count = 0;
 					foreach ( $temp_array as $temp_row ) {
@@ -849,6 +865,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				}
 
 				$indicator = $temp_return;
+// print_r($ind_array);
+// echo "End </br>";
 
 
 				break;
@@ -870,7 +888,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				$running_total = 0;
 				$running_count = 0;
 				foreach ( $this -> peer_results as $row ) {
-					if ( $row[$ind_name] != 0 ) {
+					if ( ( $row[$ind_name] != 0 ) and
+					( !is_null($row[$ind_name]) ) ){
 						$running_total +=  $row[$ind_name];
 						$running_count++;
 					}
@@ -883,11 +902,11 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				$running_total = 0;
 				$running_count = 0;
 				foreach ( $this -> total_results as $row ) {
-					if ( $row[$ind_name] == 0 ) {
-						$row[$ind_name] = $this -> impute_missing_data( $ind_name, $this -> total_results );
+					if ( ( $row[$ind_name] != 0 ) and
+					( !is_null($row[$ind_name]) ) ){
+						$running_total +=  $row[$ind_name];
+						$running_count++;
 					}
-					$running_total +=  $row[$ind_name];
-					$running_count ++;
 				}
 				$temp_total1 = $running_total/( $running_count ? $running_count : 1 );
 				$temp_total = number_format( (float)$temp_total1, 2, '.', '' );
@@ -964,7 +983,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 					// echo 'Naming imm_rost' . $ind_out_array['name'] . '<br>';
 				}
 
-				$ind_out_arr['range'] = $averages_array['rost_min'] . ' - ' . $averages_array['rost_min'];
+				$ind_out_array['range'] = $averages_array['rost_min'] . ' - ' . $averages_array['rost_min'];
 
 
 				$indicator = $ind_out_array;
@@ -1118,7 +1137,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 */
 		public function calculate_starfield( $indicator_labels, $result_row ) {
 			$weights = $this -> weights_levels; // Directly from the databse
-// echo "Weights " . count($weights);
+			// echo "Weights " . count($weights);
 			$temp_array = array();
 			$accum_total = array();
 			$accum_weight = array();
@@ -1133,9 +1152,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// if (use_extended_indicator){
 
 				foreach ( $indicator_labels as $composite ) { //Steps through all the composite indicators
-// echo "Starfield for " . $composite . ": </br>";
-// print_R($temp_entry);
-// echo "End </br>";
 					$active_inds = 0;
 					$mounting_total  = 0;
 					$mounting_weight = 0;
@@ -1176,8 +1192,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				);
 				// );
 			}
-
-
 
 			return $return_array;
 		}
@@ -1232,7 +1246,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$keys = array_keys( $inds );
 
 			$chart_array = array();
-			for ( $k = 0; $k < count( $inds ); $k++ ) {
+			// for ( $k = 0; $k < count( $inds ); $k++ ) {
+			foreach($keys as $k) {
 				$temp_array = array(
 					'Indicator' => $inds[$k],
 					'color' => $cols[$k],
@@ -1419,6 +1434,75 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			}
 			return $t_view;
 		}
+
+		private function exportQualityToCSV(){
+			// output headers so that the file is downloaded rather than displayed
+		     // header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		     // header( 'Content-Description: File Transfer' );
+		     // header( 'Content-type: application/csv' );
+		     // header( 'Content-Disposition: attachment; filename="MyDataFile.csv"' );
+		     // header( 'Expires: 0' );
+		     // header( 'Pragma: public' );
+			ob_start();
+			     // Set header row values
+		    $csv_fields=array();
+		    $csv_fields[] = 'Team';
+		    $csv_fields[] = 'Iteration';
+		    $csv_fields[] = 'Overall';
+		    $csv_fields[] = 'Access';
+		    $csv_fields[] = 'Sensitivity';
+		    $csv_fields[] = 'Trust';
+		    $csv_fields[] = 'Knowledge';
+		    $csv_fields[] = 'Commitment';
+		    $csv_fields[] = 'Collaboration';
+			// create a file pointer connected to the output stream
+			$output = @fopen('wp-content/uploads/export.csv', 'w') or show_error("Can't open php://output");
+			echo $output;
+			// The results for every team is already available
+			// in $this -> total_results
+			echo '<table>';
+			for ($i = 0; $i < count($csv_fields); $i++){
+				echo '<th>' . $csv_fields[$i] .'</th>';
+			};
+			$qual_inds_array = array();
+
+			global $wpdb;
+			$sql_save = 'SELECT * FROM indicators WHERE save_status = "locked" ';
+
+			$this -> total_saved  = $wpdb -> get_results( $sql_save, ARRAY_A );
+
+
+			foreach ( $this -> total_saved as $team ) {
+				echo '</br>' . $team['team_code'] . '<br>';
+				$temp_array = array();
+				// $temp_inds = $this -> calculate_starfield( $this -> qual_inds, $team );
+				$temp_inds =  $this -> extract_indicator( $this -> qual_inds, 'qual_drill', $team );
+			print_r($temp_inds);
+			echo '</br>';
+				$keys = array_keys( $temp_inds );
+				foreach ( $keys as $k ) {
+					$temp_array[$k] = $temp_inds[$k]['total'];
+				}
+				// array_push($qual_inds_array, $temp_array);
+				// var_dump($temp_array);
+				echo '<tr><td>'. $team["team_code"] . '</td><td>'. $team["year_code"] . '</td><td>' . $temp_array["overall"] . '</td><td>' . $temp_array["access"] . '</td><td>' . $temp_array["sensitivity"] . '</td>';
+				echo '<td>' . $temp_array["trust"] . '</td><td>' . $temp_array["knowledge"] . '</td><td>' . $temp_array["commitment"] . '</td><td>' .$temp_array["collaboration"] . '</td></tr>';
+			}
+			echo '</table>';
+
+
+
+
+			// output the column headings
+			fputcsv($output, $csv_fields);
+
+			fputcsv($output, array("Text1", "Text2") ); 
+			fclose($output);
+			$csvStr = ob_get_contents(); // + "csv";
+			ob_end_clean();
+
+			echo $csvStr;
+		} 
 
 	}
 }

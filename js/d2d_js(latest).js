@@ -27,11 +27,14 @@ jQuery(document).ready( function($) {
         // the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
         $.post(ajax_object.ajaxurl, data, function(response) {
             
-// alert("Selected " + selected_option);
+// alert("Handler 2 " + selected_option);
 
-            if (response['fail_code'] == 'was not found' ){
-                // alert("Team code " + response["team_code"] + ' was not found');
-                $('#d2d_instruct').html('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
+            if (response['fail_code'] == 'not_found' ){
+                // $('#code_here').val('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
+                // $("INPUT[name='team_code']").blur();
+                // $("INPUT[name='team_code']").val('');
+                // $("INPUT[name='team_code']").focus();
+                alert("Team code " + response["team_code"] + ' was not found');
              } else {      
                  // alert("table 1 " + response[15]);
                for (i = 0; i < 12 ; i++){
@@ -91,7 +94,7 @@ jQuery(document).ready( function($) {
     }
     
     function myHandler2( event ){
-        // event.preventDefault();
+        event.preventDefault();
 
 
         var selected_option = $(this).find( 'option:selected' ).text();
@@ -109,14 +112,18 @@ jQuery(document).ready( function($) {
         };
         // the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
         $.post(ajax_object.ajaxurl, data, function(response) {
-            if (response['fail_code'] == 'not_found' ){
-                // alert("Team code " + response["team_code"] + ' was not found.');
-                $('#d2d_instruct').html('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
-             } else {      
+  // alert("Handler 1 " + selected_option);
+          if (response['fail_code'] == 'not_found' ){
+                // $("INPUT[name='team_code']").blur();
+                // $("INPUT[name='team_code']").val('');
+                // $("INPUT[name='team_code']").focus();
+                $('#new_code').val('Team code <em>"' + response["team_code"] + '"</em> not found. Try again.');
+                 alert("This team code (" + response["team_code"] + ') was not found.');
+            } else {      
          // alert("Updating " + response["team_code"]);
                
-                $("INPUT[name='team_code']").blur();
-                $("select").blur();
+                // $("INPUT[name='team_code']").blur();
+                // $("select").blur();
 
                 // alert("table 2" + response[15]['Team']);
                 for (i = 0; i < 12 ; i++){
