@@ -5,9 +5,16 @@
  *
  *
  * @author Neil
- * @version 0.5
+ * @version 2.0
  * @created 03-June-2015 10:06 AM
- * @updated 02-Jan-2016
+ * @updated 10-Jan-2016
+ * Revises the access to database table.
+ * Loads all indicator data into memory as extended array with decoded team data
+ * and calculated composite indicators for every locked team record.
+ * In calculating the composite indicators, the random imputation is implemented
+ * at the time of calculation.
+ * The plugin also adds a  shortcode to examine the composite indicators 
+ * for each team.
  */
 // Prohibit direct script loading.
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
@@ -51,6 +58,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			// 'cost_settings',
 			// 'cost_inst'
 		);
+
+		public $all_labels;
 
 		public $qual_inds = array();
 
@@ -145,18 +154,24 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 		private $integration_labels = array();
 
-		private $data_qual_labels = array(
-			'cervical' => array(
-				'indicator' => "Team quality",
-				'short_label' => 'emr_q_cervical'),
-			'colorectal' => array(
-				'indicator' => "Team quality",
-				'short_label' => 'emr_q_colorectal'),
-			'smoking' => array(
-				'indicator' => "Team quality",
-				'short_label' => 'emr_q_smoking')
-		);
+		// private $data_qual_labels = array(
+		// 		'cervical' => array(
+		// 		'indicator' => "Team quality",
+		// 		'short_label' => 'emr_q_cervical'),
+		// 	'colorectal' => array(
+		// 		'indicator' => "Team quality",
+		// 		'short_label' => 'emr_q_colorectal'),
+		// 	'smoking' => array(
+		// 		'indicator' => "Team quality",
+		// 		'short_label' => 'emr_q_smoking')
+		// );
 		
+		private $data_qual_labels = array(
+				'indicator' => "Team quality",
+				'short_label' => 'emr_q_cervical'
+		);
+
+
 
 		private $sami_labels = array(
 			'indicator' => "Team quality",
@@ -180,19 +195,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				'collaboration'
 			);
 
-			// $this -> make_all_labels();
-
-			// $iteration = 2;
-			// $this -> pat_centered_labels = $d2d_data_specs -> make_chart("pat_centered", $iteration);
-			// $this -> effectiveness_labels = $d2d_data_specs -> make_chart("effectiveness", $iteration);
-			// $this -> access_labels = $d2d_data_specs -> make_chart("access", $iteration);
-			// $this -> integration_labels = $d2d_data_specs -> make_chart("integration", $iteration);
-
-			// $this -> table_labels = $this -> make_table_labels();
-
 		}
 
-		private function make_all_labels( $iteration ) {
+		private function make_current_labels( $iteration ) {
 			global $d2d_data_specs;
 
 			$this -> pat_centered_labels = $d2d_data_specs -> make_chart( "pat_centered", $iteration );
@@ -266,7 +271,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			$this -> retrieve_data_sets( 'wp' );
 
-			$this -> make_all_labels( 3 );
+			$this -> make_current_labels( 3 );
 
 			$this -> table_labels = $this -> make_table_labels();
 
@@ -299,7 +304,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			if ( $this -> validate_team_code() ) {
 
-				$this -> make_all_labels( $this -> iteration );
+				$this -> make_current_labels( $this -> iteration );
 
 				$this -> d2d_values = $this -> build_d2d_ind_values();
 
@@ -593,49 +598,47 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		}
 
 
-		private function build_emrqual_stats( $indicator_labels ) {
-
-			$count_val = count( $indicator_labels);
-			$top_vals = array( 
-				'team' => 0 , 
-				'peers' => 0, 
-				'total' => 0
-				);
-			$low_vals = array();
-
-			foreach ($indicator_labels as $ind){
-				$ind_k = $ind['short_label'];
-				$low_val = $this -> extract_indicator( $ind_k, 'cost_qual', NULL ); 
-				$low_vals[] = array(
-					'team'  => $low_val[0],
-					'peers' => $low_val[1],
-					'total' => $low_val[2]
-					);
-			}
-
-			$keys = array_keys($top_vals);
-
-			foreach ($keys as $k) {
-				for($i = 0; $i < 3; $i++){
-			// 	// foreach ($inds_k as $ik){
-					$top_vals[$k] = $top_vals[$k] + $low_vals[$i][$k];
-				}
-				$top_vals[$k] = number_format( $top_vals[$k]/$count_val, 2 );
-			
-
-			}
-			return $top_vals;
-		}
-
-
 		private function build_simple_stats( $indicator_labels ) {
-			$vals = $this -> extract_indicator( $indicator_labels['short_label'], 'cost_qual', NULL );
 
-			$top_vals = array(
-				'team'  => number_format( $vals[0], 2 ),
-				'peers' => number_format( $vals[1], 2 ),
-				'total' => number_format( $vals[2], 2 )
-			);
+			// If this is the emr data quality indicator,
+			// Find the average of the indicators in the group
+			if ( count( $indicator_labels > 2 )  ) {
+				$count_val = count( $indicator_labels);
+				$top_vals = array( 
+					'team' => 0 , 
+					'peers' => 0, 
+					'total' => 0
+					);
+				$low_vals = array();
+
+				foreach ($indicator_labels as $ind){
+					$ind_k = $ind['short_label'];
+					$low_val = $this -> extract_indicator( $ind_k, 'cost_qual', NULL ); 
+					$low_vals[] = array(
+						'team'  => $low_val[0],
+						'peers' => $low_val[1],
+						'total' => $low_val[2]
+						);
+				}
+
+				$keys = array_keys($top_vals);
+
+				foreach ($keys as $k) {
+					for($i = 0; $i < 3; $i++){
+				// 	// foreach ($inds_k as $ik){
+						$top_vals[$k] = $top_vals[$k] + $low_vals[$i][$k];
+					}
+					$top_vals[$k] = number_format( $top_vals[$k]/$count_val, 2 );				}
+
+			} else {   
+				$vals = $this -> extract_indicator( $indicator_labels['short_label'], 'cost_qual', NULL );
+
+				$top_vals = array(
+					'team'  => number_format( $vals[0], 2 ),
+					'peers' => number_format( $vals[1], 2 ),
+					'total' => number_format( $vals[2], 2 )
+				);
+			}
 			return $top_vals;
 		}
 
@@ -822,14 +825,14 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				$temp_total = number_format( (float)$temp_total1, 2, '.', '' );
 
 				$indicator = $temp_total;
-				// echo '' . $ind_name . '<br>';
+				// echo '<br>' . $ind_name . '<br>';
 				// print_r($indicator);
 				break;
-				
+
 			case 'qual_drill':
 				// echo "qual_drill array : </br>";
 				// print_r($ind_array);
-				
+
 				$temp_return = array();
 				// this will extract all the indicators in the array passed in as $ind_name
 				// for the array of database results for passed in as $ind_array
@@ -842,7 +845,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 						// Test if this row is to be included
 						// i.e., does it contain extended data,
 						// and is the extended data flag set?
-				// echo 'row ' . $row['team_code'] . '';
+				// echo 'row ' . $row['team_code'] . '</br>';
 						if ( $this -> check_extended_inds( $row ) ) {
 							$temp_entry =  $this -> calculate_starfield( $ind_name, $row ) ;
 							array_push( $temp_array, $temp_entry );
@@ -856,7 +859,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 				// For each of the composite indicators
 				foreach ( $ind_name as $ind ) {
-					// echo 'ind ' . $ind . '</br>';
+				// echo 'ind ' . $ind . '</br>';
 					$running_total = 0;
 					$running_count = 0;
 					foreach ( $temp_array as $temp_row ) {
@@ -946,8 +949,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 						if ($ind_name == "diabetes_core"){
 							$temp_entry = array(
-								'total' => $row[ $ind_name ] *100,
-								'rostered' => $row[ $ind_name ] *100
+								'total' => $row[ $ind_name ],
+								'rostered' => 55 //$row[ $ind_name ]
 							);
 						} else {
 							$temp_entry = $this -> d2d_decode( $row[ $ind_name ] ) ;
@@ -1170,7 +1173,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 					$temp_both_vals = $this -> d2d_decode( $result_row[ $temp_ind_name ] );
 					$temp_value0 = $temp_both_vals['total'];
 
-					$temp_value = $this -> d2d_apply_threshold( $temp_value0, $weights_row['lower'], $weights_row['upper'] );
+					$temp_value = $this -> d2d_apply_threshold( $temp_value0, $weights_row['min'], $weights_row['max'] );
 
 					if ( $temp_value > 0 ) {
 						$active_inds++;
@@ -1240,7 +1243,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			array_push( $all_charts, $this -> build_trend_chart( $this -> access_labels, 'hex' ) );
 			array_push( $all_charts, $this -> build_trend_chart( $this -> integration_labels, 'hex' ) );
 			array_push( $all_charts, $this -> build_simple_stats( $this -> sami_labels ) );
-			array_push( $all_charts, $this -> build_emrqual_stats( $this -> data_qual_labels ) );
+			array_push( $all_charts, $this -> build_simple_stats( $this -> data_qual_labels ) );
 			array_push( $all_charts, $this -> build_peer_inds() );
 			array_push( $all_charts, $this -> build_table( $this -> table_labels ) );
 			array_push( $all_charts, '<center><b>Core D2D ' .$this -> iteration . '.0 indicators</b></center>' );

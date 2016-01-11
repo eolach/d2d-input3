@@ -1366,6 +1366,28 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 			}
 			return $chart_array;
 		}
+
+		/**
+		 * Retrieves all indicators, regarless of whether they are current or previous
+		 * @param  [type] $chart_name [description]
+		 * @return [type]             [description]
+		 */
+		public function get_all_indicators(){
+			$chart_array = array();
+			foreach($this -> data_specs as $spec){
+				$this_chart_id = $spec['specs']['chart_id'];
+				if  (!is_null($this_chart_id)) {
+					$temp = array(
+						"indicator" => $spec['specs']['chart_label'],
+						"short_label" => $spec['specs']['short_label'],
+						"hyperlink" => $spec['specs']['hyperlink']
+						);
+					array_push($chart_array, $temp);
+				}
+			}
+			return $chart_array;
+		}
+
 	}
 }
 
