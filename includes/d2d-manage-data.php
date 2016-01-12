@@ -39,7 +39,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			$this -> display_data_table();
 			
 			$this -> prepare_quality_table_header();
-			// $this -> build_quality_table();
+			$this -> build_quality_table();
 			$this -> display_quality_table();
 		}
 
@@ -52,7 +52,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 		 */
 		public function retrieve_data(){
 
-			$sql_team = 'SELECT * FROM indicators WHERE save_status = "locked" AND year_code = "D2D 2.0"';
+			$sql_team = 'SELECT * FROM indicators WHERE save_status = "locked" ';
 			$sql_weights = 'SELECT * FROM d2d_weights3_0';
 
 			global $wpdb;
@@ -64,6 +64,9 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 
 		public function prepare_data_table_header(){
 			// Retrieve compositie variables as first column of weights array
+			// $this -> data_vars[] = 'team_code';
+			$this -> data_vars[] = 'team_year';
+			// $this -> data_vars[] = 'team_year';
 			foreach($this -> weights as $row){
 				array_push($this -> data_vars, $row['short_label']);
 			}
@@ -75,14 +78,17 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			foreach ($this -> team_results as $team){
 				$team_row = array();
 				foreach( $this -> data_vars as $var){
-					if (is_null($team[$var]) ){
-						$team_row[$var] = null;
-					} else {
-						$numeric_var = $this -> d2d_decode($team[$var]);
-						$team_row[$var] = $numeric_var['total'];
+					if ( $var != 'team_year'){
+						if ( is_null($team[$var])){
+							$team_row[$var] = null;
+						} else {
+							$numeric_var = $this -> d2d_decode($team[$var]);
+							$team_row[$var] = $numeric_var['total'];
+						}
 					}
+					$team_row['team_year'] = $team['team_code'] . '_' .  str_replace('D2D ', '', $team['year_code']);
 				}
-				$this -> data_table[$team['team_code']] = $team_row;
+				$this -> data_table[$team_row['team_year']] = $team_row;
 			}
 
 
@@ -90,27 +96,27 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 
 		public function impute_data(){
 			$data_table_keys = array_keys($this -> data_table);
-			// print_r($data_table_keys);
+			print_r($data_table_keys);
 			foreach($this -> data_vars as $var){
-				$valid_var_table = array();
-				foreach( $data_table_keys as $key){
-					$this_val = $this -> data_table[$key][$var];
-					if(!($this_val == '')){
-						$valid_var_table[] = $this_val;
-					} else {
-						 $this -> data_table[$key][$var]  = "n/a" ;
+					if ( $var != 'team_year'){
+					$valid_var_table = array();
+					foreach( $data_table_keys as $key){
+						$this_val = $this -> data_table[$key][$var];
+						if(!($this_val == '')){
+							$valid_var_table[] = $this_val;
+						} else {
+							 $this -> data_table[$key][$var]  = "n/a" ;
+						}
+					}
+					foreach( $data_table_keys as $key){
+						$this_val = $this -> data_table[$key][$var];
+						if( ($this_val == 'n/a')  or
+							($this_val == 'missing') ) {
+								$imputed_key  = array_rand ( $valid_var_table);
+								$this -> data_table[$key][$var] = $valid_var_table[$imputed_key];						;
+						}
 					}
 				}
-				foreach( $data_table_keys as $key){
-					$this_val = $this -> data_table[$key][$var];
-					if( ($this_val == 'n/a')  or
-						($this_val == 'missing') ) {
-							$imputed_key  = array_rand ( $valid_var_table);
-							$this -> data_table[$key][$var] = 
-							'*' . $valid_var_table[$imputed_key];						;
-					}
-				}
-
 			}
 		}
 
@@ -135,34 +141,82 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			// Retrievequality variables as a subset of the columns of the weights
 			$q_keys = array_keys($this -> weights[0]);
 			$offset = 4;
-			for ($i = 0; $i < 6; $i++){
+			for ($i = 0; $i < 7; $i++){
 				$this -> quality_keys[$i] = $q_keys[$i + $offset];
 			}
 
 		}
 
-		public function build_quality_table($val){
-			$new_row = array();
-			foreach ($this -> quality_keys as $key){
-				$new_row[$key] = $val;
+		public function build_quality_table(){
+			$team_codes = array_keys($this -> data_table);
+			foreach ($team_codes as $code){
+				// echo ' Type is ' . gettype($code) . '<br>';
+				// print_r($code); 
+				$team = $this -> data_table[$code];
+				$team_row = array();
+				$starfield_array = $this -> calculate_starfield ( $this -> quality_keys, $team);
+				foreach( $this -> quality_keys as $var){
+					$team_row[$var] = $starfield_array[$var];
+				}
+				$this -> quality_table[$code] = $team_row;
+				// print_r($team_row);
 			}
-			$this -> quality_table[] = $new_row[$key];
 		}
 
 		public function display_quality_table(){
 			echo '<table>';
+			echo '<th>team</th>';
+			echo '<th>iteration</th>';
 			foreach($this -> quality_keys  as $ind){
 				echo '<th>' . $ind .'</th>';
 			};
-			foreach($this-> quality_table as $qual_row){
+
+			$team_codes = array_keys($this -> quality_table);
+			foreach($team_codes as $code){
+				$team = $this -> quality_table[$code];
 				echo '<tr>';
+				echo '<td>' . $code . '</td>';
 				foreach($this -> quality_keys  as $ind){
-					echo '<td>' . count($this-> quality_table). '</td>';
+					echo '<td>' . $this -> quality_table[$code][$ind] . '</td>';
 				}
 				echo '</tr>';
 			}
 			echo '</table>';
 		}
+
+		public function calculate_starfield( $quality_labels,  $team_data ){
+			$starfield_array = array();
+			$weights = $this -> weights;
+			foreach ( $quality_labels as $qual_name){
+	// echo 'indicator &nbsp' . $qual_name . '<br>';
+				$composite_number = 0;
+				foreach ($weights as $w_row ){
+					$data_name = $w_row['short_label'];
+					$temp_value0 = $team_data[$data_name];
+					$data_value = $this -> d2d_apply_threshold( $temp_value0, $w_row['lower'], $w_row['upper'] );
+					
+					$temp_number = $data_value * $w_row[$qual_name];
+	// echo  'weight row &nbsp&nbsp: ' . $w_row['short_label'] . ' <br>';
+					$composite_number += $temp_number;
+				}
+				$starfield_array[$qual_name] = $composite_number;
+			}
+			return $starfield_array;
+
+		}
+
+		public function d2d_apply_threshold( $val, $low, $high ) {
+			if ( $val < $low ) {
+				$new_val = 0;
+			}elseif ( $val > $high ) {
+				$new_val = 100;
+			} else {
+				$new_val = 100 * ( ( ( $high - $low ) > 0 ) ? ( $val - $low )/( $high - $low ) : 1 );
+			}
+
+			return $new_val;
+		}
+
 
 		/**
 		 * Decodes the packed hex data in the database
