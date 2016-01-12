@@ -39,6 +39,7 @@ require_once D2D_INPUT_ABSPATH . 'includes/d2d-indicator.php';
 // require_once D2D_INPUT_ABSPATH . 'd2d-review-addon.php';
 require_once D2D_REVIEW_ABSPATH . 'includes/d2d-review-class.php';
 require_once D2D_REVIEW_ABSPATH . 'includes/d2d-get-data.php';
+require_once D2D_REVIEW_ABSPATH . 'includes/d2d-manage-data.php';
 
 // function d2d_load_styles2() {
 // }

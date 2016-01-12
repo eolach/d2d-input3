@@ -843,10 +843,12 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 						// i.e., does it contain extended data,
 						// and is the extended data flag set?
 				// echo 'row ' . $row['team_code'] . '';
-						if ( $this -> check_extended_inds( $row ) ) {
+				// 
+				// Next condition removed 2016-01-11 to include all records in calculation
+						// if ( $this -> check_extended_inds( $row ) ) {
 							$temp_entry =  $this -> calculate_starfield( $ind_name, $row ) ;
 							array_push( $temp_array, $temp_entry );
-						}
+						// }
 					}
 
 

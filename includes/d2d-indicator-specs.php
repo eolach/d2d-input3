@@ -1333,7 +1333,7 @@ if ( !class_exists( 'D2D_data_specs' ) ) {
 			$tab_array = array();
 
 			foreach($this -> data_specs as $spec){
-				if ($spec['specs']['review_tab'] == $tab_name ) {
+				if ((array_key_exists('review_tab', $spec['specs']) ) and ($spec['specs']['review_tab'] == $tab_name ) ) {
 					$temp = $spec['specs']['short_label'];
 					array_push($tab_array, $temp);
 				}

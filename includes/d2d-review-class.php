@@ -60,11 +60,14 @@ if ( !class_exists( 'D2D_review' ) ) {
 							Click to drill down - Cost</a></center>';
 					echo '</div>';
 					
+					
 					echo '<div id="select_d2d">';
-						echo '<select name="sel_data">';
-							echo '<option value="d2d_only" float: right>Teams with core data only</option>';
-							echo '<option value="extended" selected="checked"; >Teams with core and expanded data</option>';
-						echo '</select>';
+					//The following selection was removed in 3.0 to allow calculation of composite for all record
+					//  
+						// echo '<select name="sel_data">';
+						// 	echo '<option value="d2d_only" float: right>Teams with core data only</option>';
+						// 	echo '<option value="extended" selected="checked"; >Teams with core and expanded data</option>';
+						// echo '</select>';
 					echo '</div>';
 					
 					// Lay out the rollup charts
