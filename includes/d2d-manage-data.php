@@ -165,8 +165,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 
 		public function display_quality_table(){
 			echo '<table>';
-			echo '<th>team</th>';
-			echo '<th>iteration</th>';
+			echo '<th>team_iteration</th>';
 			foreach($this -> quality_keys  as $ind){
 				echo '<th>' . $ind .'</th>';
 			};
@@ -199,7 +198,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 	// echo  'weight row &nbsp&nbsp: ' . $w_row['short_label'] . ' <br>';
 					$composite_number += $temp_number;
 				}
-				$starfield_array[$qual_name] = $composite_number;
+				$starfield_array[$qual_name] = number_format( $composite_number / count($weights) ,2 );
 			}
 			return $starfield_array;
 
@@ -241,8 +240,11 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			$this -> manage_data();
 			return ob_get_clean();
 		}
-	}
 
+		public function get_quality_indicator(){
+
+		}
+	}
 }
 
 
