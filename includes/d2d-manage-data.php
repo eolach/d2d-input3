@@ -46,7 +46,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			$this -> display_data_table();
 			
 			$this -> display_quality_table();
-			$this -> exportQualityToCSV();
+			// $this -> exportQualityToCSV();
 		}
 
 		/**
@@ -96,8 +96,6 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 				}
 				$this -> data_table[$team_row['team_year']] = $team_row;
 			}
-
-
 		}
 
 		public function impute_data(){
@@ -165,7 +163,6 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 					$team_row[$var] = $starfield_array[$var];
 				}
 				$this -> quality_table[$code] = $team_row;
-				// print_r($team_row);
 			}
 		}
 
@@ -188,6 +185,25 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			}
 			echo '</table>';
 		}
+
+
+		/**
+		 * Decodes the packed hex data in the database
+		 *
+		 * @param string  $hex_code [six number separated by underscore]
+		 * @return array  of values for rostered and total patients
+		 * Note that the order of values in the pack is total first
+		 * and then rostered.
+		 * */
+		private function d2d_decode( $hex_code ) {
+			$stats_set = explode( '_', $hex_code );
+			$stats = array(
+				'rostered' => $stats_set[5],
+				'total'    => $stats_set[2]
+			);
+			return $stats;
+		}
+
 
 		public function calculate_starfield( $quality_labels,  $team_data ){
 			$starfield_array = array();
@@ -218,84 +234,71 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 
 			return $new_val;
 		}
-
-
-		/**
-		 * Decodes the packed hex data in the database
-		 *
-		 * @param string  $hex_code [six number separated by underscore]
-		 * @return array  of values for rostered and total patients
-		 * Note that the order of values in the pack is total first
-		 * and then rostered.
-		 * */
-		private function d2d_decode( $hex_code ) {
-			$stats_set = explode( '_', $hex_code );
-			$stats = array(
-				'rostered' => $stats_set[5],
-				'total'    => $stats_set[2]
-			);
-			return $stats;
+		public function get_quality_indicator($indicator_labels,  $team, $iteration){
+			$code = $team . '_' .  str_replace('D2D ', '', $iteration);
+			$return_array = array();
+			foreach ( $indicator_labels as $ind ) {
+				$datum = $this -> quality_table[$code][$ind];
+				$return_array[ $ind ] = array(
+					'total' => $datum,
+					'rostered' => 234
+				);
+			}
+			return $return_array;
 		}
-		// Create the shortcode for this plugin
 
+		public function write_to_db(){
+			$team_keys = array_keys($this -> data_table);
+			
+			global $wpdb;
+
+			$truncate_sql = "TRUNCATE TABLE d2d_quality";
+
+			// $wpdb -> query($truncate_sql);
+
+			$names = array();
+			$values = array();
+			$format = array();
+
+			foreach($team_keys as $key){
+			// $key = $team_keys[0];
+
+				$sql_array = array();
+				$keys = array_keys($this -> data_table[$key]);
+				foreach($keys as $k){
+					$sql_array[$k] = $this -> data_table[$key][$k];
+				}
+				$keys = array_keys($this -> quality_table[$key]);
+				foreach($keys as $k){
+					$sql_array[$k] = $this -> quality_table[$key][$k];
+				}
+
+				//build array of formats
+				$format = array();
+				$format[] = '%s';
+				for ($i=0; $i <  count($sql_array) - 1 ; $i++) { 
+					$format[] = '%f';
+				}
+				//save to the table
+				$wpdb -> insert(
+				'd2d_quality',
+					$sql_array,
+					$format
+					);
+			}
+			// echo '<br>names<br>';
+			// print_r($sql_array);
+			// echo '<br>format<br>';
+			// print_r($format);
+		}
+		
+		// Create the shortcode for this plugin
 		public function data_shortcode() {
 			ob_start();
 			$this -> manage_data();
+			$this -> write_to_db();
 			return ob_get_clean();
 		}
-
-		public function get_quality_indicator($indicator,  $iteration){
-			$record_id = $indicator . '_' .  str_replace('D2D ', '', $iteration);
-			return $this -> quality_table[$record_id];
-		}
-
-		// private function exportQualityToCSV(){
-		// 	// output headers so that the file is downloaded rather than displayed
-		//      // header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
-		//      // header( 'Content-Description: File Transfer' );
-		//      // header( 'Content-type: application/csv' );
-		//      // header( 'Content-Disposition: attachment; filename="MyDataFile.csv"' );
-		//      // header( 'Expires: 0' );
-		//      // header( 'Pragma: public' );
-		// 	ob_start();
-		// 	     // Set header row values
-		//     $csv_fields=array();
-		//     $csv_fields[] = 'Team';
-		//     $csv_fields[] = 'Iteration';
-		//     $csv_fields[] = 'Overall';
-		//     $csv_fields[] = 'Access';
-		//     $csv_fields[] = 'Sensitivity';
-		//     $csv_fields[] = 'Trust';
-		//     $csv_fields[] = 'Knowledge';
-		//     $csv_fields[] = 'Commitment';
-		//     $csv_fields[] = 'Collaboration';
-		// 	// create a file pointer connected to the output stream
-		// 	$output = @fopen('wp-content/uploads/export.csv', 'w') or show_error("Can't open php://output");
-		// 	echo $output;
-		// 	// The results for every team is already available
-		// 	// in $this -> total_results
-		// 	echo '<table>';
-		// 	for ($i = 0; $i < count($csv_fields); $i++){
-		// 		echo '<th>' . $csv_fields[$i] .'</th>';
-		// 	};
-		// 	$qual_inds_array = array();
-
-		// 	echo '</table>';
-
-
-
-
-		// 	// output the column headings
-		// 	fputcsv($output, $csv_fields);
-
-		// 	fputcsv($output, array("Text1", "Text2") ); 
-		// 	fclose($output);
-		// 	$csvStr = ob_get_contents(); // + "csv";
-		// 	ob_end_clean();
-
-		// 	echo $csvStr;
-		// } 
-
 
 	}
 }

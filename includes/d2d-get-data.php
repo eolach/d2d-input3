@@ -831,6 +831,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// print_r($ind_array);
 				
 				global $D2D_manage_data;
+								$D2D_manage_data -> build_tables();
+
 
 				$temp_return = array();
 				// this will extract all the indicators in the array passed in as $ind_name
@@ -849,7 +851,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// Next condition removed 2016-01-11 to include all records in calculation
 						// if ( $this -> check_extended_inds( $row ) ) {
 							// $temp_entry =  $this -> calculate_starfield( $ind_name, $row ) ;
-							$temp_entry =  $D2D_manage_data -> get_quality_indicator( $ind_name, $this -> iteration ) ;
+							$temp_entry =  $D2D_manage_data -> get_quality_indicator($ind_name, 
+								$row['team_code'], 
+								$this -> year_code ) ;
 							array_push( $temp_array, $temp_entry );
 						// }
 					}

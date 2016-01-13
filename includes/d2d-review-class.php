@@ -47,7 +47,7 @@ if ( !class_exists( 'D2D_review' ) ) {
 			}
 			if ( class_exists( 'D2D_manage_data' ) ) {
 				$D2D_manage_data = new D2D_manage_data();
-				$D2D_manage_data -> build_tables();
+				// $D2D_manage_data -> build_tables();
 			}
 			echo '<div class="tab-content">';
 				
