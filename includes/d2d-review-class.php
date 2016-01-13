@@ -42,6 +42,13 @@ if ( !class_exists( 'D2D_review' ) ) {
 		public function process_functions(){
 			include( D2D_REVIEW_ABSPATH . 'includes/main_page.php');
 				
+			if ( class_exists( 'D2D_fetch_data' ) ) {
+				$D2D_fetch_data = new D2D_fetch_data();
+			}
+			if ( class_exists( 'D2D_manage_data' ) ) {
+				$D2D_manage_data = new D2D_manage_data();
+				$D2D_manage_data -> build_tables();
+			}
 			echo '<div class="tab-content">';
 				
 			//  Layout the composite indicators

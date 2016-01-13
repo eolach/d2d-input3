@@ -167,9 +167,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		// Constructor and utilities
 		public function __construct() {
 
-			global $d2d_data_specs;
-			$this -> core_d2d_inds = $d2d_data_specs -> make_tab_group( "core_d2d_inds" );
-			$this -> cost_inds = $d2d_data_specs -> make_tab_group( "cost_inds" );
 			$this -> qual_inds = array(
 				'overall',
 				'access',
@@ -194,6 +191,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 		private function make_all_labels( $iteration ) {
 			global $d2d_data_specs;
+			$this -> core_d2d_inds = $d2d_data_specs -> make_tab_group( "core_d2d_inds" );
+			$this -> cost_inds = $d2d_data_specs -> make_tab_group( "cost_inds" );
 
 			$this -> pat_centered_labels = $d2d_data_specs -> make_chart( "pat_centered", $iteration );
 			$this -> effectiveness_labels = $d2d_data_specs -> make_chart( "effectiveness", $iteration );
@@ -260,23 +259,22 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [type] [description]
 		 */
 		public function test_wp_get_data() {
-			echo "Saving quality data";
 
 			$this -> read_post( $this -> test_vars );
 
 			$this -> retrieve_data_sets( 'wp' );
 
-			$this -> make_all_labels( 3 );
+			$this -> make_all_labels( $this -> iteration );
 
 			$this -> table_labels = $this -> make_table_labels();
 
+
 			$this -> d2d_values = $this -> build_d2d_ind_values();
 
-			$this -> exportQualityToCSV();
+			// // $this -> exportQualityToCSV();
 
-			// $response = $this -> build_charts();
+			$response = $this -> build_charts();
 
-			// print_r( $response );
 
 			return $response;
 		}
@@ -317,10 +315,10 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		}
 
 		public $test_vars = array(
-			'team_code' => 'gregtest9',
+			'team_code' => 'gregtest2',
 			'setting' => 'Urban',
 			'teaching' => 'Non-teaching',
-			'year_code' => 'D2D 3.0',
+			'year_code' => 'D2D 2.0',
 			'hosp_emr' => 'Yes',
 			'num_pts' => '10k_30k',
 			'rost_all' => 'total',
@@ -521,6 +519,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 				$this -> total_results      = $wpdb -> get_results( $sql_total, ARRAY_A );
 				$this -> weights_levels     = $wpdb -> get_results( $sql_weights, ARRAY_A );
+			// echo '</br>' . $sql_team . '</br>';
+			// print_r($this -> team_results);
 			}
 			// echo 'team sql ' . $sql_team . '<br>';
 			// echo 'Peer sql ' . $sql_peer . '<br>';
@@ -573,8 +573,6 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			foreach ( $this -> core_d2d_inds as $ind ) {
 				$values_array[ $ind ] = $this -> build_stats( $ind, 'hex' );
 			}
-			// echo "</br>values_array </br>";
-			// print_r($values_array);
 
 			// Compute Cost
 			foreach ( $this -> cost_inds as $ind ) {
@@ -693,6 +691,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 		 * @return [array]           [three vales for team, peers and total]
 		 */
 		public function build_stats( $ind_name, $ind_type ) {
+
+
 			$indicator_set = array(
 				'team'  => $this -> extract_indicator( $ind_name, $ind_type, $this -> team_results ),
 				'peers' => $this -> extract_indicator( $ind_name, $ind_type, $this -> peer_results ),
@@ -830,6 +830,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// echo "qual_drill array : </br>";
 				// print_r($ind_array);
 				
+				global $D2D_manage_data;
+
 				$temp_return = array();
 				// this will extract all the indicators in the array passed in as $ind_name
 				// for the array of database results for passed in as $ind_array
@@ -846,7 +848,8 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// 
 				// Next condition removed 2016-01-11 to include all records in calculation
 						// if ( $this -> check_extended_inds( $row ) ) {
-							$temp_entry =  $this -> calculate_starfield( $ind_name, $row ) ;
+							// $temp_entry =  $this -> calculate_starfield( $ind_name, $row ) ;
+							$temp_entry =  $D2D_manage_data -> get_quality_indicator( $ind_name, $this -> iteration ) ;
 							array_push( $temp_array, $temp_entry );
 						// }
 					}
@@ -1446,74 +1449,52 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			return $t_view;
 		}
 
-		private function exportQualityToCSV(){
-			// output headers so that the file is downloaded rather than displayed
-		     // header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
-		     // header( 'Content-Description: File Transfer' );
-		     // header( 'Content-type: application/csv' );
-		     // header( 'Content-Disposition: attachment; filename="MyDataFile.csv"' );
-		     // header( 'Expires: 0' );
-		     // header( 'Pragma: public' );
-			ob_start();
-			     // Set header row values
-		    $csv_fields=array();
-		    $csv_fields[] = 'Team';
-		    $csv_fields[] = 'Iteration';
-		    $csv_fields[] = 'Overall';
-		    $csv_fields[] = 'Access';
-		    $csv_fields[] = 'Sensitivity';
-		    $csv_fields[] = 'Trust';
-		    $csv_fields[] = 'Knowledge';
-		    $csv_fields[] = 'Commitment';
-		    $csv_fields[] = 'Collaboration';
-			// create a file pointer connected to the output stream
-			$output = @fopen('wp-content/uploads/export.csv', 'w') or show_error("Can't open php://output");
-			echo $output;
-			// The results for every team is already available
-			// in $this -> total_results
-			echo '<table>';
-			for ($i = 0; $i < count($csv_fields); $i++){
-				echo '<th>' . $csv_fields[$i] .'</th>';
-			};
-			$qual_inds_array = array();
+		// private function exportQualityToCSV(){
+		// 	// output headers so that the file is downloaded rather than displayed
+		//      // header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		//      // header( 'Content-Description: File Transfer' );
+		//      // header( 'Content-type: application/csv' );
+		//      // header( 'Content-Disposition: attachment; filename="MyDataFile.csv"' );
+		//      // header( 'Expires: 0' );
+		//      // header( 'Pragma: public' );
+		// 	ob_start();
+		// 	     // Set header row values
+		//     $csv_fields=array();
+		//     $csv_fields[] = 'Team';
+		//     $csv_fields[] = 'Iteration';
+		//     $csv_fields[] = 'Overall';
+		//     $csv_fields[] = 'Access';
+		//     $csv_fields[] = 'Sensitivity';
+		//     $csv_fields[] = 'Trust';
+		//     $csv_fields[] = 'Knowledge';
+		//     $csv_fields[] = 'Commitment';
+		//     $csv_fields[] = 'Collaboration';
+		// 	// create a file pointer connected to the output stream
+		// 	$output = @fopen('wp-content/uploads/export.csv', 'w') or show_error("Can't open php://output");
+		// 	echo $output;
+		// 	// The results for every team is already available
+		// 	// in $this -> total_results
+		// 	echo '<table>';
+		// 	for ($i = 0; $i < count($csv_fields); $i++){
+		// 		echo '<th>' . $csv_fields[$i] .'</th>';
+		// 	};
+		// 	$qual_inds_array = array();
 
-			global $wpdb;
-			$sql_save = 'SELECT * FROM indicators WHERE save_status = "locked" ';
-
-			$this -> total_saved  = $wpdb -> get_results( $sql_save, ARRAY_A );
-
-
-			foreach ( $this -> total_saved as $team ) {
-				echo '</br>' . $team['team_code'] . '<br>';
-				$temp_array = array();
-				// $temp_inds = $this -> calculate_starfield( $this -> qual_inds, $team );
-				$temp_inds =  $this -> extract_indicator( $this -> qual_inds, 'qual_drill', $team );
-			print_r($temp_inds);
-			echo '</br>';
-				$keys = array_keys( $temp_inds );
-				foreach ( $keys as $k ) {
-					$temp_array[$k] = $temp_inds[$k]['total'];
-				}
-				// array_push($qual_inds_array, $temp_array);
-				// var_dump($temp_array);
-				echo '<tr><td>'. $team["team_code"] . '</td><td>'. $team["year_code"] . '</td><td>' . $temp_array["overall"] . '</td><td>' . $temp_array["access"] . '</td><td>' . $temp_array["sensitivity"] . '</td>';
-				echo '<td>' . $temp_array["trust"] . '</td><td>' . $temp_array["knowledge"] . '</td><td>' . $temp_array["commitment"] . '</td><td>' .$temp_array["collaboration"] . '</td></tr>';
-			}
-			echo '</table>';
+		// 	echo '</table>';
 
 
 
 
-			// output the column headings
-			fputcsv($output, $csv_fields);
+		// 	// output the column headings
+		// 	fputcsv($output, $csv_fields);
 
-			fputcsv($output, array("Text1", "Text2") ); 
-			fclose($output);
-			$csvStr = ob_get_contents(); // + "csv";
-			ob_end_clean();
+		// 	fputcsv($output, array("Text1", "Text2") ); 
+		// 	fclose($output);
+		// 	$csvStr = ob_get_contents(); // + "csv";
+		// 	ob_end_clean();
 
-			echo $csvStr;
-		} 
+		// 	echo $csvStr;
+		// } 
 
 	}
 }

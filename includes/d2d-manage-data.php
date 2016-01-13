@@ -31,16 +31,22 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			add_shortcode( 'manage data', array( $this, 'data_shortcode' ) );
 		}
 
-		public function manage_data(){
+		public function build_tables(){
 			$this -> retrieve_data();
 			$this -> prepare_data_table_header();
 			$this -> build_data_table();
 			$this -> impute_data();
-			$this -> display_data_table();
-			
 			$this -> prepare_quality_table_header();
 			$this -> build_quality_table();
+		}
+
+		public function manage_data(){
+			$this -> build_tables();
+
+			$this -> display_data_table();
+			
 			$this -> display_quality_table();
+			$this -> exportQualityToCSV();
 		}
 
 		/**
@@ -96,7 +102,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 
 		public function impute_data(){
 			$data_table_keys = array_keys($this -> data_table);
-			print_r($data_table_keys);
+			// print_r($data_table_keys);
 			foreach($this -> data_vars as $var){
 					if ( $var != 'team_year'){
 					$valid_var_table = array();
@@ -187,7 +193,6 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			$starfield_array = array();
 			$weights = $this -> weights;
 			foreach ( $quality_labels as $qual_name){
-	// echo 'indicator &nbsp' . $qual_name . '<br>';
 				$composite_number = 0;
 				foreach ($weights as $w_row ){
 					$data_name = $w_row['short_label'];
@@ -195,13 +200,11 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 					$data_value = $this -> d2d_apply_threshold( $temp_value0, $w_row['lower'], $w_row['upper'] );
 					
 					$temp_number = $data_value * $w_row[$qual_name];
-	// echo  'weight row &nbsp&nbsp: ' . $w_row['short_label'] . ' <br>';
 					$composite_number += $temp_number;
 				}
 				$starfield_array[$qual_name] = number_format( $composite_number / count($weights) ,2 );
 			}
 			return $starfield_array;
-
 		}
 
 		public function d2d_apply_threshold( $val, $low, $high ) {
@@ -241,9 +244,59 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			return ob_get_clean();
 		}
 
-		public function get_quality_indicator(){
-
+		public function get_quality_indicator($indicator,  $iteration){
+			$record_id = $indicator . '_' .  str_replace('D2D ', '', $iteration);
+			return $this -> quality_table[$record_id];
 		}
+
+		// private function exportQualityToCSV(){
+		// 	// output headers so that the file is downloaded rather than displayed
+		//      // header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		//      // header( 'Content-Description: File Transfer' );
+		//      // header( 'Content-type: application/csv' );
+		//      // header( 'Content-Disposition: attachment; filename="MyDataFile.csv"' );
+		//      // header( 'Expires: 0' );
+		//      // header( 'Pragma: public' );
+		// 	ob_start();
+		// 	     // Set header row values
+		//     $csv_fields=array();
+		//     $csv_fields[] = 'Team';
+		//     $csv_fields[] = 'Iteration';
+		//     $csv_fields[] = 'Overall';
+		//     $csv_fields[] = 'Access';
+		//     $csv_fields[] = 'Sensitivity';
+		//     $csv_fields[] = 'Trust';
+		//     $csv_fields[] = 'Knowledge';
+		//     $csv_fields[] = 'Commitment';
+		//     $csv_fields[] = 'Collaboration';
+		// 	// create a file pointer connected to the output stream
+		// 	$output = @fopen('wp-content/uploads/export.csv', 'w') or show_error("Can't open php://output");
+		// 	echo $output;
+		// 	// The results for every team is already available
+		// 	// in $this -> total_results
+		// 	echo '<table>';
+		// 	for ($i = 0; $i < count($csv_fields); $i++){
+		// 		echo '<th>' . $csv_fields[$i] .'</th>';
+		// 	};
+		// 	$qual_inds_array = array();
+
+		// 	echo '</table>';
+
+
+
+
+		// 	// output the column headings
+		// 	fputcsv($output, $csv_fields);
+
+		// 	fputcsv($output, array("Text1", "Text2") ); 
+		// 	fclose($output);
+		// 	$csvStr = ob_get_contents(); // + "csv";
+		// 	ob_end_clean();
+
+		// 	echo $csvStr;
+		// } 
+
+
 	}
 }
 
