@@ -11,7 +11,8 @@
  * 	captured confirm review.
  * 	Upgraded to allow data input D2D 3.0
  * 	UPgeaded to allow data review D2D 3.0
- * Version: 2.2.0
+ * 	Activated quality results reporting and export
+ * Version: 2.3.0
  * Author: HealthEngineer
  * Author URI: http://www.HealthEngineer.com
  * Text Domain: NA

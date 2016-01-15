@@ -223,7 +223,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 	
 			// Step through the domains
 			foreach ( $quality_labels as $qual_name){
-					echo '<br>domain: '  . $qual_name . '<br>';
+					// echo '<br>domain: '  . $qual_name . '<br>';
 				
 				if($qual_name != 'overall'){
 
@@ -238,33 +238,33 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 					foreach ($weights as $w_row ){
 						// Retrieve the indicator name
 						$data_name = $w_row['short_label'];
-						echo '<br>indicator:' . $data_name . '<br>';
+						// echo '<br>indicator:' . $data_name . '<br>';
 						// Retrieve the team value for that indicator
 						$temp_value0 = $team_data[$data_name];
-						echo 'raw value:' . $temp_value0 . '<br>';
+						// echo 'raw value:' . $temp_value0 . '<br>';
 						// Apply the threshold for this indicator
 						$data_value = $this -> d2d_apply_threshold( $temp_value0, $w_row['lower'], $w_row['upper'] );
-						echo 'normalized value:' . $data_value . '<br>';
+						// echo 'normalized value:' . $data_value . '<br>';
 						// Apply the weight to the modified indicator value
 						$temp_number = $data_value * $w_row[$qual_name];
-						echo 'weighted value:' . $temp_number . '<br>';
+						// echo 'weighted value:' . $temp_number . '<br>';
 						// Add the weighted contribution of this indicator value to this domain for this team
 						$composite_number += $temp_number;
 					}
 					// Format the calculated value
 					$starfield_array[$qual_name] = number_format( $composite_number ,2 );
 					$starfield_overall += $starfield_array[$qual_name];
-					echo 'accumulated contribution:' . $starfield_array[$qual_name] . '<br>';
-					echo 'starfield_overall:' . $starfield_overall. '<br>';
+					// echo 'accumulated contribution:' . $starfield_array[$qual_name] . '<br>';
+					// echo 'starfield_overall:' . $starfield_overall. '<br>';
 				} else {
 					$starfield_array['overall'] = $starfield_overall;
-					echo 'overall contribution:' . $starfield_array['overall'] . '<br>';
+					// echo 'overall contribution:' . $starfield_array['overall'] . '<br>';
 				}
 			}
-			echo '<br>Starfield<br>';
+			// echo '<br>Starfield<br>';
 			// Return the complete list
-			print_r($starfield_array);
-			echo '<br>';
+			// print_r($starfield_array);
+			// echo '<br>';
 			return $starfield_array;
 		}
 
