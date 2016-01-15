@@ -59,7 +59,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 		public function retrieve_data(){
 
 			$sql_team = 'SELECT * FROM indicators WHERE save_status = "locked" ';
-			$sql_weights = 'SELECT * FROM d2d_weights3_0';
+			$sql_weights = 'SELECT * FROM d2d_weights3_0a';
 
 			global $wpdb;
 			$this -> team_results = $wpdb -> get_results( $sql_team, ARRAY_A );
@@ -205,35 +205,104 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 		}
 
 
+		/**
+		 * Calculates the value of a single team's quality (Starfield) indicator
+		 * in each of the seven domains listed.
+		 * @param  [array] $quality_labels [A list of the names of each of the quality domains 
+		 * as identified in the column names of the weights table]
+		 * @param  [array] $team_data      [A list of values of all indicators associated with the selected team.
+		 * This list includes imputed values (random replacement) for missing indicators for that team]
+		 * @return [array] $starfield_array [List of six plus one values for team in each of the domainss]
+		 */
 		public function calculate_starfield( $quality_labels,  $team_data ){
+			
 			$starfield_array = array();
 			$weights = $this -> weights;
+			$domain_factor = array();
+			$starfield_overall = 0;
+	
+			// Step through the domains
 			foreach ( $quality_labels as $qual_name){
-				$composite_number = 0;
-				foreach ($weights as $w_row ){
-					$data_name = $w_row['short_label'];
-					$temp_value0 = $team_data[$data_name];
-					$data_value = $this -> d2d_apply_threshold( $temp_value0, $w_row['lower'], $w_row['upper'] );
+					echo '<br>domain: '  . $qual_name . '<br>';
+				
+				if($qual_name != 'overall'){
+
+					$composite_number = 0;
+					// Step through the indicator weights for the domain and the team values for the indicator
+					// $domain_factor[$qual_name] = 0;
+					// foreach ($weights as $w_row ){
+					// 	$domain_factor[$qual_name] += $w_row[$qual_name];
+					// }
+					// echo '<br>domain factor:' . $domain_factor[$qual_name] . '<br>';
 					
-					$temp_number = $data_value * $w_row[$qual_name];
-					$composite_number += $temp_number;
+					foreach ($weights as $w_row ){
+						// Retrieve the indicator name
+						$data_name = $w_row['short_label'];
+						echo '<br>indicator:' . $data_name . '<br>';
+						// Retrieve the team value for that indicator
+						$temp_value0 = $team_data[$data_name];
+						echo 'raw value:' . $temp_value0 . '<br>';
+						// Apply the threshold for this indicator
+						$data_value = $this -> d2d_apply_threshold( $temp_value0, $w_row['lower'], $w_row['upper'] );
+						echo 'normalized value:' . $data_value . '<br>';
+						// Apply the weight to the modified indicator value
+						$temp_number = $data_value * $w_row[$qual_name];
+						echo 'weighted value:' . $temp_number . '<br>';
+						// Add the weighted contribution of this indicator value to this domain for this team
+						$composite_number += $temp_number;
+					}
+					// Format the calculated value
+					$starfield_array[$qual_name] = number_format( $composite_number ,2 );
+					$starfield_overall += $starfield_array[$qual_name];
+					echo 'accumulated contribution:' . $starfield_array[$qual_name] . '<br>';
+					echo 'starfield_overall:' . $starfield_overall. '<br>';
+				} else {
+					$starfield_array['overall'] = $starfield_overall;
+					echo 'overall contribution:' . $starfield_array['overall'] . '<br>';
 				}
-				$starfield_array[$qual_name] = number_format( $composite_number / count($weights) ,2 );
 			}
+			echo '<br>Starfield<br>';
+			// Return the complete list
+			print_r($starfield_array);
+			echo '<br>';
 			return $starfield_array;
 		}
 
+		/**
+		 * Contrain the indicator value between supplied thresholds
+		 * @param  [numeric] $val  [Vlaue to be constrained]
+		 * @param  [numeric] $low  [Threshold below which values are to be constrained]
+		 * @param  [numeric] $high [Threshold above which values are to be constrained]
+		 * @return [numeric] $new_val  [Contstrained value]
+		 */
 		public function d2d_apply_threshold( $val, $low, $high ) {
-			if ( $val < $low ) {
-				$new_val = 0;
-			}elseif ( $val > $high ) {
-				$new_val = 100;
+			// Normal treatment: lower threshold is 0, higher is 1
+			if($low < $high){
+				// Below lower - unfavorable
+				if ( $val < $low ) {
+				// Above upper - favorable
+					$new_val = 0;
+				} elseif ( $val > $high ) {
+				// In between
+						$new_val = 100;
+				} else {
+					$new_val = 100 * ( ( ( $high - $low ) > 0 ) ? ( $val - $low )/( $high - $low ) : 1 );
+				}
 			} else {
-				$new_val = 100 * ( ( ( $high - $low ) > 0 ) ? ( $val - $low )/( $high - $low ) : 1 );
+			// Exception treatment: lower threshold is 1, high is 0
+				// Below lower - favorable
+				if ( $val < $low ) {
+					$new_val = 100;
+				}elseif ( $val > $high ) {
+				// Above upper - unfavorable
+					$new_val = 0;
+				} else {
+					$new_val = 100 * ( ( ( $high - $low ) > 0 ) ? ( $val - $low )/( $high - $low ) : 1 );
+				}
 			}
-
 			return $new_val;
 		}
+		
 		public function get_quality_indicator($indicator_labels,  $team, $iteration){
 			$code = $team . '_' .  str_replace('D2D ', '', $iteration);
 			$return_array = array();
