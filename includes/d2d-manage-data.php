@@ -59,7 +59,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 		public function retrieve_data(){
 
 			$sql_team = 'SELECT * FROM indicators WHERE save_status = "locked" ';
-			$sql_weights = 'SELECT * FROM d2d_weights3_0a';
+			$sql_weights = 'SELECT * FROM weights_and_thresholds';
 
 			global $wpdb;
 			$this -> team_results = $wpdb -> get_results( $sql_team, ARRAY_A );
@@ -321,7 +321,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			
 			global $wpdb;
 
-			$truncate_sql = "TRUNCATE TABLE d2d_quality";
+			$truncate_sql = "TRUNCATE TABLE quality_results";
 
 			// $wpdb -> query($truncate_sql);
 
@@ -350,7 +350,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 				}
 				//save to the table
 				$wpdb -> insert(
-				'd2d_quality',
+				'quality_results',
 					$sql_array,
 					$format
 					);
