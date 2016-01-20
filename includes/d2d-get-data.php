@@ -725,7 +725,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 			$temp_max = 0;
 			foreach ( $results as $row ) {
 				if ($ind == 'diabetes_core'){
-					$temp_value =  $row[ $ind ];
+					$temp_value =  $row[ $ind ] * 100;
 				}else {
 					$temp_values =  $this -> d2d_decode( $row[ $ind ] ) ;
 					$temp_value = $temp_values['total'];

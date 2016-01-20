@@ -249,12 +249,14 @@ jQuery(document).ready( function($) {
             $(this).text("Click to view this iteration's data");
             $(this).attr('href', '#trend');
             $('#trend').addClass('tab active');
+            $('#table_view').text("");
             $('#teams').removeClass('tab active').addClass('tab');
         } else {
             $(this).text("Click to view my team\'s data over iterations")
             $(this).attr('href', '#teams');
             $('#teams').addClass('tab active');
-            $('#trend').removeClass('tab active').addClass('tab');
+            $('#table_view').text("Click for table view");
+           $('#trend').removeClass('tab active').addClass('tab');
         }
          
             for (i = 0; i < 12 ; i++){
