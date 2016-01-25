@@ -891,7 +891,9 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 
 			case 'cost_qual':
 
+				// Initialize the output
 				$ind_out_array = array();
+				
 				// Get the values from the result arrays
 				// Team
 				if ( $this -> team_results ) {

@@ -230,9 +230,9 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 					$composite_number = 0;
 					// Step through the indicator weights for the domain and the team values for the indicator
 					// $domain_factor[$qual_name] = 0;
-					// foreach ($weights as $w_row ){
-					// 	$domain_factor[$qual_name] += $w_row[$qual_name];
-					// }
+					foreach ($weights as $w_row ){
+						$domain_factor[$qual_name] += $w_row[$qual_name];
+					}
 					// echo '<br>domain factor:' . $domain_factor[$qual_name] . '<br>';
 					
 					foreach ($weights as $w_row ){
@@ -252,8 +252,9 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 						$composite_number += $temp_number;
 					}
 					// Format the calculated value
-					$starfield_array[$qual_name] = number_format( $composite_number ,2 );
-					$starfield_overall += $starfield_array[$qual_name];
+					$temp_score = number_format( $composite_number ,2 );
+					$starfield_array[$qual_name] = number_format( $composite_number/$domain_factor[$qual_name] ,2 );
+					$starfield_overall += $temp_score;
 					// echo 'accumulated contribution:' . $starfield_array[$qual_name] . '<br>';
 					// echo 'starfield_overall:' . $starfield_overall. '<br>';
 				} else {
