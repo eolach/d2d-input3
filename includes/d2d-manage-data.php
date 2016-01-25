@@ -286,7 +286,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 				// In between
 						$new_val = 100;
 				} else {
-					$new_val = 100 * ( ( ( $high - $low ) > 0 ) ? ( $val - $low )/( $high - $low ) : 1 );
+					$new_val = 100 * ( $val - $low )/( $high - $low );
 				}
 			} else {
 			// Exception treatment: lower threshold is 1, high is 0
@@ -297,7 +297,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 				// Above upper - unfavorable
 					$new_val = 0;
 				} else {
-					$new_val = 100 * ( ( ( $high - $low ) > 0 ) ? ( $val - $low )/( $high - $low ) : 1 );
+					$new_val = 100 * ( $low - $val )/( $high - $low );
 				}
 			}
 			return $new_val;

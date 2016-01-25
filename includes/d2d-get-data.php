@@ -831,7 +831,7 @@ if ( !class_exists( 'D2D_fetch_data' ) ) {
 				// print_r($ind_array);
 				
 				global $D2D_manage_data;
-								$D2D_manage_data -> build_tables();
+				$D2D_manage_data -> build_tables();
 
 
 				$temp_return = array();
