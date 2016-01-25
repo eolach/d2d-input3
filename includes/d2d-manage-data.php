@@ -280,10 +280,10 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			// Normal treatment: lower threshold is 0, higher is 1
 			if($low < $high){
 				// Below lower - unfavorable
-				if ( $val < $low ) {
+				if ( $val <= $low ) {
 				// Above upper - favorable
 					$new_val = 0;
-				} elseif ( $val > $high ) {
+				} elseif ( $val >= $high ) {
 				// In between
 						$new_val = 100;
 				} else {
@@ -292,9 +292,9 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			} else {
 			// Exception treatment: lower threshold is 1, high is 0
 				// Below lower - favorable
-				if ( $val < $low ) {
+				if ( $val <= $low ) {
 					$new_val = 100;
-				}elseif ( $val > $high ) {
+				}elseif ( $val >= $high ) {
 				// Above upper - unfavorable
 					$new_val = 0;
 				} else {
