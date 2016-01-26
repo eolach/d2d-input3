@@ -112,13 +112,15 @@ if ( !class_exists( 'D2D_review' ) ) {
 					echo '</div>';
 
 					echo '<div id="message">';
+						// The folloing text was cahnged by Greg Mitcell online
+						// and patched into the orginal
 						echo '<center><h2>Capacity indicator</h2></center>
 							<p>To achieve AFHTO’s vision  that all Ontarians have timely 
 							access to high-quality, comprehensive, inter-professional 
 							primary care, we need to know how much capacity we have to 
-							provide that care.  Discussions are underway to refine 
-							the definition of a measure and develop processes to access 
-							that data for subsequent iterations of D2D.';
+							provide that care.  Please see Time Spent tab above to see 
+							AFHTO’s first efforts to explore this indicator, 
+							starting with an estimate of the time spent delivering primary care.';
 					echo '</div>';
 
 				echo '</div>';
