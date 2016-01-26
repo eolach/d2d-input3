@@ -68,14 +68,14 @@ if ( !class_exists( 'D2D_review' ) ) {
 					echo '</div>';
 					
 					
-					echo '<div id="select_d2d">';
+					// echo '<div id="select_d2d">';
 					//The following selection was removed in 3.0 to allow calculation of composite for all record
 					//  
 						// echo '<select name="sel_data">';
 						// 	echo '<option value="d2d_only" float: right>Teams with core data only</option>';
 						// 	echo '<option value="extended" selected="checked"; >Teams with core and expanded data</option>';
 						// echo '</select>';
-					echo '</div>';
+					// echo '</div>';
 					
 					// Lay out the rollup charts
 					echo '<div id="level1q" class="tab active">';

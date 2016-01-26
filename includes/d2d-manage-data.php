@@ -220,6 +220,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 			$weights = $this -> weights;
 			$domain_factor = array();
 			$starfield_overall = 0;
+			// print_r($weights);
 	
 			// Step through the domains
 			foreach ( $quality_labels as $qual_name){
