@@ -325,7 +325,7 @@ if ( !class_exists( 'D2D_manage_data' ) ) {
 
 			$truncate_sql = "TRUNCATE TABLE quality_results";
 
-			// $wpdb -> query($truncate_sql);
+			$wpdb -> query($truncate_sql);
 
 			$names = array();
 			$values = array();
